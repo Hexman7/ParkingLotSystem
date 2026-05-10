@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
+	implementation('com.h2database:h2:2.4.240')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation('org.assertj:assertj-core:3.27.7')
 	testImplementation platform('org.junit:junit-bom:5.10.0')
