@@ -1,5 +1,7 @@
 package com.dawidcz.parkinglotsystem.model;
 
+import java.sql.*;
+
 public class ParkingLot {
 
     private long id;
@@ -53,5 +55,24 @@ public class ParkingLot {
                 ", city='" + city + '\'' +
                 ", streetAddress='" + streetAddress + '\'' +
                 '}';
+    }
+
+    public int getTotalSlotCount(Connection connection) {
+        String sql = "SELECT COUNT(*) FROM PARKING_SLOT WHERE PARKING_LOT_ID=?";
+        int count = 0;
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1,this.getId());
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                count = rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return count;
     }
 }

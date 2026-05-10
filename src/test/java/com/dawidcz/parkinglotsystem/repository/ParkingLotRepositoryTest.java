@@ -1,6 +1,7 @@
 package com.dawidcz.parkinglotsystem.repository;
 
 import com.dawidcz.parkinglotsystem.model.ParkingLot;
+import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ class ParkingLotRepositoryTest {
     void setUp() throws SQLException {
         connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");
         connection.setAutoCommit(false);
+        plrepo = new ParkingLotRepository(connection);
     }
 
     @AfterAll
@@ -38,7 +40,6 @@ class ParkingLotRepositoryTest {
     @Test
     public void canSaveParkingLot() {
         ParkingLot pl = new ParkingLot("Parking Katowice", "Katowice", "Chorzowska 50");
-        ParkingLotRepository plrepo =  new ParkingLotRepository(connection);
         ParkingLot savedPl = plrepo.save(pl);
         assertThat(savedPl.getId()).isGreaterThan(0);
     }
@@ -47,11 +48,24 @@ class ParkingLotRepositoryTest {
     public void canSaveTwoParkingLots(){
         ParkingLot pl = new ParkingLot("Parking Katowice", "Katowice", "Chorzowska 50");
         ParkingLot pl2 = new ParkingLot("Parking Warszawa", "Warszawa", "Puławska 34");
-        ParkingLotRepository plrepo =  new ParkingLotRepository(connection);
         ParkingLot savedPl = plrepo.save(pl);
         ParkingLot savedPl2 = plrepo.save(pl2);
         assertThat(savedPl.getId()).isNotEqualTo(savedPl2.getId());
     }
+
+    @Test
+    public void canAddParkingSlotsToLot(){
+        ParkingLot pl = new ParkingLot("Parking Katowice", "Katowice", "Chorzowska 50");
+        ParkingSlot parkingSlot = new ParkingSlot(1, pl.getId(), 10, false , false);
+        ParkingSlot parkingSlot2 = new ParkingSlot(2, pl.getId(), 14, false , false);
+        ParkingLot savedPl = plrepo.save(pl);
+        plrepo.addSlotToLot(savedPl,parkingSlot);
+        plrepo.addSlotToLot(savedPl,parkingSlot2);
+        int totalSlotCount = savedPl.getTotalSlotCount(connection);
+        assertThat(totalSlotCount).isEqualTo(2);
+    }
+
+
 
 
 
