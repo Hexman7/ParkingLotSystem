@@ -20,7 +20,8 @@ class ParkingLotRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");
+//  lp      connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");
+        connection = DriverManager.getConnection("jdbc:h2:F:\\KursyJava\\ParkingLotSystemDb\\parkinglotsystem"); //pc
         connection.setAutoCommit(false);
         plrepo = new ParkingLotRepository(connection);
     }
@@ -63,6 +64,17 @@ class ParkingLotRepositoryTest {
         plrepo.addSlotToLot(savedPl,parkingSlot2);
         int totalSlotCount = savedPl.getTotalSlotCount(connection);
         assertThat(totalSlotCount).isEqualTo(2);
+    }
+
+    @Test
+    public void canChangeParkingSlotOccupancy(){
+        ParkingLot pl = new ParkingLot("Parking Katowice", "Katowice", "Chorzowska 50");
+        ParkingSlot parkingSlot = new ParkingSlot(1, pl.getId(), 10, false , false);
+        ParkingLot savedPl = plrepo.save(pl);
+        plrepo.addSlotToLot(savedPl,parkingSlot);
+        parkingSlot.setOccupied(true);
+
+        assertThat(parkingSlot.isOccupied()).isEqualTo(true);
     }
 
 
