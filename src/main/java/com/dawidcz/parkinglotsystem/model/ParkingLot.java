@@ -68,11 +68,9 @@ public class ParkingLot {
             while(rs.next()){
                 count = rs.getInt(1);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         return count;
     }
 }
