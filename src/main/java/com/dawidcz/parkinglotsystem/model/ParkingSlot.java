@@ -1,26 +1,37 @@
 package com.dawidcz.parkinglotsystem.model;
 
 public class ParkingSlot {
-    private int id;
+    private Long id;
+    private int slotNumber;
     private Long parkingLotId;
     private double distanceToEntry;
     private boolean isOccupied;
     private boolean isEvCompatible;
 
-    public ParkingSlot(int id, Long parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
-        this.id = id;
+    public ParkingSlot(){}
+
+    public ParkingSlot(int slotNumber, Long parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
+        this.slotNumber = slotNumber;
         this.parkingLotId = parkingLotId;
         this.distanceToEntry = distanceToEntry;
         this.isOccupied = isOccupied;
         this.isEvCompatible = isEvCompatible;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public int getSlotNumber() {
+        return slotNumber;
+    }
+
+    public void setSlotNumber(int slotNumber) {
+        this.slotNumber = slotNumber;
     }
 
     public Long getParkingLotId() {
@@ -53,5 +64,17 @@ public class ParkingSlot {
 
     public void setEvCompatible(boolean evCompatible) {
         isEvCompatible = evCompatible;
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingSlot{" +
+                "id=" + id +
+                ", slotNumber=" + slotNumber +
+                ", parkingLotId=" + parkingLotId +
+                ", distanceToEntry=" + distanceToEntry +
+                ", isOccupied=" + isOccupied +
+                ", isEvCompatible=" + isEvCompatible +
+                '}';
     }
 }

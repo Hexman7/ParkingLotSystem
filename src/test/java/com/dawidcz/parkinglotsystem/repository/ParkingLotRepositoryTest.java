@@ -62,7 +62,7 @@ class ParkingLotRepositoryTest {
         ParkingLot savedPl = plrepo.save(pl);
         plrepo.addSlotToLot(savedPl,parkingSlot);
         plrepo.addSlotToLot(savedPl,parkingSlot2);
-        int totalSlotCount = savedPl.getTotalSlotCount(connection);
+        int totalSlotCount = plrepo.getTotalSlotCount(savedPl);
         assertThat(totalSlotCount).isEqualTo(2);
     }
 
@@ -73,8 +73,12 @@ class ParkingLotRepositoryTest {
         ParkingLot savedPl = plrepo.save(pl);
         plrepo.addSlotToLot(savedPl,parkingSlot);
         parkingSlot.setOccupied(true);
+        System.out.println(parkingSlot);
+        plrepo.Update(parkingSlot);
 
-        assertThat(parkingSlot.isOccupied()).isEqualTo(true);
+        ParkingSlot retrievedPrSl = plrepo.getSlotById(parkingSlot);
+        System.out.println(retrievedPrSl);
+        assertThat(retrievedPrSl.isOccupied()).isEqualTo(true);
     }
 
 
