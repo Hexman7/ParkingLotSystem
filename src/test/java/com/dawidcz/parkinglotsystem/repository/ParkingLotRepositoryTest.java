@@ -20,8 +20,8 @@ class ParkingLotRepositoryTest {
 
     @BeforeEach
     void setUp() throws SQLException {
-//  lp      connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");
-        connection = DriverManager.getConnection("jdbc:h2:F:\\KursyJava\\ParkingLotSystemDb\\parkinglotsystem"); //pc
+        connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");  // lp
+//        connection = DriverManager.getConnection("jdbc:h2:F:\\KursyJava\\ParkingLotSystemDb\\parkinglotsystem"); //pc
         connection.setAutoCommit(false);
         plrepo = new ParkingLotRepository(connection);
     }

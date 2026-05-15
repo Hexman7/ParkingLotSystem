@@ -5,10 +5,10 @@ import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 
 import java.sql.*;
 
-public class ParkingLotRepository {
+public class ParkingLotRepository extends CrudRepository<ParkingLot> {
     private Connection connection;
     public ParkingLotRepository(Connection connection) {
-        this.connection = connection;
+        super(connection);
     }
 
 

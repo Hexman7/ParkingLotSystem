@@ -1,31 +1,16 @@
 package com.dawidcz.parkinglotsystem.model;
 
+import com.dawidcz.parkinglotsystem.annotation.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class Charger {
-    private int id;
+    @Id
+    private Long id;
     private int parkingSlotId;
     private boolean isOccupied;
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getParkingSlotId() {
-        return parkingSlotId;
-    }
-
-    public void setParkingSlotId(int parkingSlotId) {
-        this.parkingSlotId = parkingSlotId;
-    }
-
-    public boolean isOccupied() {
-        return isOccupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        isOccupied = occupied;
-    }
 }

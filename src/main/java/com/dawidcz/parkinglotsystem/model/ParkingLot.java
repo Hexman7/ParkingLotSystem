@@ -1,10 +1,16 @@
 package com.dawidcz.parkinglotsystem.model;
 
+import com.dawidcz.parkinglotsystem.annotation.Id;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.*;
 
+@Data
+@NoArgsConstructor
 public class ParkingLot {
-
-    private long id;
+    @Id
+    private Long id;
     private String name;
     private String city;
     private String streetAddress;
@@ -12,38 +18,6 @@ public class ParkingLot {
     public ParkingLot(String name, String city, String streetAddress){
         this.name = name;
         this.city = city;
-        this.streetAddress = streetAddress;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long parkingLotID) {
-        this.id = parkingLotID;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStreetAddress() {
-        return streetAddress;
-    }
-
-    public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
 
