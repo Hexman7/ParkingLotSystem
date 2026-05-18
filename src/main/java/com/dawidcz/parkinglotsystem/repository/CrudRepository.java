@@ -7,7 +7,6 @@ abstract class CrudRepository<T> {
 
     public CrudRepository(Connection connection){
         this.connection = connection;
-
     }
 
 

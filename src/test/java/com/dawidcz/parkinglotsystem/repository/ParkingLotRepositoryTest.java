@@ -15,15 +15,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ParkingLotRepositoryTest {
     private static Connection connection;
-    private ParkingLotRepository plrepo;
+    private static ParkingLotRepository plrepo;
 
 
     @BeforeEach
     void setUp() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");  // lp
+//        connection = DriverManager.getConnection("jdbc:h2:C:\\Users\\dawid\\Desktop\\JavaProjekty\\CoachING\\parkingLotSystemDb\\parkinglotsystem");  // lp
 //        connection = DriverManager.getConnection("jdbc:h2:F:\\KursyJava\\ParkingLotSystemDb\\parkinglotsystem"); //pc
-        connection.setAutoCommit(false);
-        plrepo = new ParkingLotRepository(connection);
+//        connection.setAutoCommit(false);
+//        plrepo = new ParkingLotRepository();
     }
 
     @AfterAll
