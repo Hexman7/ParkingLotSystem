@@ -16,7 +16,7 @@ import java.sql.*;
 public class ParkingLot {
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
     private String name;
     private String city;
     private String streetAddress;

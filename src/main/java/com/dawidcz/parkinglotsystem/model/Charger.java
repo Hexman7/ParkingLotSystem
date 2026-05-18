@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Charger {
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
     private int parkingSlotId;
     private boolean isOccupied;
 

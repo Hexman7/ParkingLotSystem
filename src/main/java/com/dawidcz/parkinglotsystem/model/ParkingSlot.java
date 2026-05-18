@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 public class ParkingSlot {
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
     private int slotNumber;
-    private Long parkingLotId;
+    private int parkingLotId;
     private double distanceToEntry;
     private boolean isOccupied;
     private boolean isEvCompatible;
 
-    public ParkingSlot(int slotNumber, Long parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
+    public ParkingSlot(int slotNumber, int parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
         this.slotNumber = slotNumber;
         this.parkingLotId = parkingLotId;
         this.distanceToEntry = distanceToEntry;
