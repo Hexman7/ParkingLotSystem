@@ -1,6 +1,5 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
@@ -19,6 +18,8 @@ public class ParkingLotService implements IParkingLotService {
 
     @Override
     public Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime) {
+//     TO DO:
+//        check if params are not empty
         Ticket ticket = new Ticket(parkingLotId,licencePlate, entryTime);
         ticket = ticketRepository.save(ticket);
         return ticket;
