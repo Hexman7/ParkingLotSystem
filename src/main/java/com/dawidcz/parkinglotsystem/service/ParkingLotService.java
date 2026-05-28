@@ -1,6 +1,7 @@
 package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.model.ParkingLot;
+import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
@@ -52,15 +53,15 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     @Override
-    public int getClosestFreeSlot() {
+    public int getClosestFreeSlot(int parkingSlotId) {
 //        return numberSlot
-        return 0;
+        return parkingSlotRepository.getClosestFreeSlot(parkingSlotId);
     }
 
     @Override
-    public int getClosestEvFreeSlot() {
+    public int getClosestEvFreeSlot(int parkingSlotId) {
 //        return numberSlot
-        return 0;
+        return parkingSlotRepository.getClosestEvFreeSlot(parkingSlotId);
     }
 
     @Override
@@ -78,8 +79,11 @@ public class ParkingLotService implements IParkingLotService {
 
     }
 
-
     public List<ParkingLot> getAll(){
         return (List<ParkingLot>) parkingLotRepository.findAll();
+    }
+
+    public List<ParkingSlot> getAllSlots(int parkingLotId) {
+        return (List<ParkingSlot>) parkingSlotRepository.getParkingSlots(parkingLotId);
     }
 }

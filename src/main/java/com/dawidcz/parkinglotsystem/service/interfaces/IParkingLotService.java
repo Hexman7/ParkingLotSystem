@@ -9,8 +9,8 @@ public interface IParkingLotService {
 
     Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime);
     void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime);
-    int getClosestFreeSlot();
-    int getClosestEvFreeSlot();
+    int getClosestFreeSlot(int parkingSlotId);
+    int getClosestEvFreeSlot(int parkingSlotId);
     int getFreeSlotsCount(int parkingLotId);
     int getTotalSlotCount(int parkingLotId);
     void processPayment();

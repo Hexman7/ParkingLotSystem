@@ -1,6 +1,7 @@
 package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.model.ParkingLot;
+import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
 import org.springframework.http.HttpStatus;
@@ -29,10 +30,13 @@ public class ParkingLotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/allLots")
     public List<ParkingLot> getAll(){
         return parkingLotService.getAll();
     }
+
+    @GetMapping("/allSlots")
+    public List<ParkingSlot> getAllSlots(@PathVariable int parkingLotId){return parkingLotService.getAllSlots(parkingLotId);}
 
     @GetMapping("/freeSlotsCount")
     public int getFreeSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getFreeSlotsCount(parkingLotId);}
@@ -40,8 +44,10 @@ public class ParkingLotController {
     @GetMapping("/totalSlotsCount")
     public int getTotalSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getTotalSlotCount(parkingLotId);}
 
+    @GetMapping("/closestFreeSlot")
+    public int getClosestFreeSlot(@PathVariable int parkingLotId){return parkingLotService.getClosestFreeSlot(parkingLotId);}
 
-
-
+    @GetMapping("/closestEvFreeSlot")
+    public int getClosestEvFreeSlot(@PathVariable int parkingLotId){return parkingLotService.getClosestEvFreeSlot(parkingLotId);}
 
 }
