@@ -1,0 +1,2 @@
+INSERT INTO ParkingLot (name,city,streetAddress) VALUES ('Parking Katowice','Katowice','Sokolska 34');
+INSERT INTO ParkingLot (name,city,streetAddress) VALUES ('Parking Warszawa','Warszawa','Dworcowa 5');

@@ -11,6 +11,9 @@ public interface ParkingSlotRepository extends CrudRepository<ParkingSlot,Intege
 
     ParkingSlot getParkingSlotBySlotNumber(int parkingLotId, int slotNumber);
 
-    @Query(value = "SELECT COUNT(ps) FROM ParkingSlot ps WHERE ps.isOccupied=false")
+    @Query(value = "SELECT COUNT(ps) FROM ParkingSlot ps WHERE ps.isOccupied=false AND ps.parkingLotId = ?1")
     int getFreeSlotsCount(int parkingLotId);
+
+    @Query(value = "SELECT COUNT(ps) FROM ParkingSlot ps WHERE ps.parkingLotId = ?1")
+    int getTotalSlotCount(int parkingLotId);
 }

@@ -1,22 +1,15 @@
 package com.dawidcz.parkinglotsystem.repository;
 
-import com.dawidcz.parkinglotsystem.model.ParkingLot;
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-class ParkingLotRepositoryTest {
+public class ParkingLotRepositoryTest {
     private static Connection connection;
     private static ParkingLotRepository plrepo;
-
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -24,6 +17,7 @@ class ParkingLotRepositoryTest {
 //        connection = DriverManager.getConnection("jdbc:h2:F:\\KursyJava\\ParkingLotSystemDb\\parkinglotsystem"); //pc
 //        connection.setAutoCommit(false);
 //        plrepo = new ParkingLotRepository();
+
     }
 
     @AfterAll
@@ -37,5 +31,7 @@ class ParkingLotRepositoryTest {
     void realAfterEach() throws SQLException {
         connection.rollback();
     }
+
+
 
 }

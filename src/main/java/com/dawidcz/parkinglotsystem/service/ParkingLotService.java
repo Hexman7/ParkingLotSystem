@@ -69,8 +69,8 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     @Override
-    public int getTotalSlotCount() {
-        return 0;
+    public int getTotalSlotCount(int parkingLotId) {
+        return parkingSlotRepository.getTotalSlotCount(parkingLotId);
     }
 
     @Override

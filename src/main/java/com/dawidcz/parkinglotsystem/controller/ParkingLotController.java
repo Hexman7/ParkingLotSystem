@@ -3,7 +3,6 @@ package com.dawidcz.parkinglotsystem.controller;
 import com.dawidcz.parkinglotsystem.model.ParkingLot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
-import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/parkinglot/{parkingLotId}")
 public class ParkingLotController {
+
+
     public record ReservationRequest(String licensePlate, LocalDateTime entryTime ) {}
 
     private final ParkingLotService parkingLotService;
@@ -35,4 +36,12 @@ public class ParkingLotController {
 
     @GetMapping("/freeSlotsCount")
     public int getFreeSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getFreeSlotsCount(parkingLotId);}
+
+    @GetMapping("/totalSlotsCount")
+    public int getTotalSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getTotalSlotCount(parkingLotId);}
+
+
+
+
+
 }

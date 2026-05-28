@@ -12,7 +12,7 @@ public interface IParkingLotService {
     int getClosestFreeSlot();
     int getClosestEvFreeSlot();
     int getFreeSlotsCount(int parkingLotId);
-    int getTotalSlotCount();
+    int getTotalSlotCount(int parkingLotId);
     void processPayment();
 }
 
