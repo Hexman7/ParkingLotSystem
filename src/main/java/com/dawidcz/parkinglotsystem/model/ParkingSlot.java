@@ -1,17 +1,19 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import com.dawidcz.parkinglotsystem.annotation.Id;
+import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ParkingSlot {
+public class ParkingSlot  implements Serializable {
     @Id
     @GeneratedValue
     private int id;

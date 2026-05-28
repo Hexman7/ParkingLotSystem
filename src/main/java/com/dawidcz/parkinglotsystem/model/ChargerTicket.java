@@ -1,24 +1,28 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import com.dawidcz.parkinglotsystem.annotation.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class ChargerTicket {
+@Entity
+public class ChargerTicket implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
     private int chargerId;
     private LocalDateTime entryTime;
-    private Optional<LocalDateTime> leaveTime = Optional.empty();
+
+    @Column(nullable = true)
+    private LocalDateTime leaveTime;
 
 }

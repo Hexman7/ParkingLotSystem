@@ -1,21 +1,26 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import com.dawidcz.parkinglotsystem.annotation.Id;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Charger {
+public class Charger implements Serializable {
+
     @Id
     @GeneratedValue
     private int id;
+
     private int parkingSlotId;
     private boolean isOccupied;
 
