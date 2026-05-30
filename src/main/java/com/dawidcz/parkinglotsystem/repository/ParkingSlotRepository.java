@@ -26,5 +26,8 @@ public interface ParkingSlotRepository extends CrudRepository<ParkingSlot,Intege
     List<ParkingSlot> getParkingSlots(int parkingLotId);
 
     @Query(value = "SELECT ps.slotNumber FROM ParkingSlot ps WHERE ps.isOccupied=false AND ps.parkingLotId = ?1  AND isEvCompatible = true ORDER BY distanceToEntry ASC LIMIT 1")
-    int getClosestEvFreeSlot(int parkingSlotId);
+    int getClosestEvFreeSlot(int parkingLotId);
+
+    @Query(value = "SELECT ps.isOccupied FROM ParkingSlot ps WHERE ps.parkingLotId = ?1 AND ps.slotNumber = ?2")
+    boolean isEmpty(int parkingLotId,int slotNumber);
 }

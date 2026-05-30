@@ -3,7 +3,9 @@ package com.dawidcz.parkinglotsystem.service;
 import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingSlotService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ParkingSlotService implements IParkingSlotService {
     private final ParkingSlotRepository parkingSlotRepo;
 
@@ -21,7 +23,7 @@ public class ParkingSlotService implements IParkingSlotService {
     }
 
     @Override
-    public Boolean isEmpty() {
-        return null;
+    public Boolean isEmpty(int parkingLotId, int slotNumber) {
+        return parkingSlotRepo.isEmpty(parkingLotId,slotNumber);
     }
 }

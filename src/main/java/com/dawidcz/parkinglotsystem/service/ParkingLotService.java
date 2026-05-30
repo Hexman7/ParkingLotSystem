@@ -53,16 +53,12 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     @Override
-    public int getClosestFreeSlot(int parkingSlotId) {
-//        return numberSlot
-        return parkingSlotRepository.getClosestFreeSlot(parkingSlotId);
+    public int getClosestFreeSlot(int parkingLotId) {
+        return parkingSlotRepository.getClosestFreeSlot(parkingLotId);
     }
 
     @Override
-    public int getClosestEvFreeSlot(int parkingSlotId) {
-//        return numberSlot
-        return parkingSlotRepository.getClosestEvFreeSlot(parkingSlotId);
-    }
+    public int getClosestEvFreeSlot(int parkingLotId) {return parkingSlotRepository.getClosestEvFreeSlot(parkingLotId);}
 
     @Override
     public int getFreeSlotsCount(int parkingLotId) {
@@ -70,9 +66,7 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     @Override
-    public int getTotalSlotCount(int parkingLotId) {
-        return parkingSlotRepository.getTotalSlotCount(parkingLotId);
-    }
+    public int getTotalSlotCount(int parkingLotId) {return parkingSlotRepository.getTotalSlotCount(parkingLotId);}
 
     @Override
     public void processPayment() {
