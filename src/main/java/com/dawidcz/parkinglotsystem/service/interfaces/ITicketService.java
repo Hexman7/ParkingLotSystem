@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 public interface ITicketService {
     Duration getDuration(Long id);
     BigDecimal calculateFee(Long id);
-    void endParking();
+    void endParking(Long id,LocalDateTime leaveTime);
 }

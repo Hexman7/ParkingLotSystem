@@ -36,7 +36,12 @@ public class TicketService implements ITicketService {
 
 
     @Override
-    public void endParking() {
-
+    public void endParking(Long id,LocalDateTime leaveTime) {
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+        if(ticket.isPresent()){
+            ticket.get().setLeaveTime(leaveTime);
+            ticketRepository.save(ticket.get());
+        }
+        else throw new RuntimeException("Parking ending failed");
     }
 }

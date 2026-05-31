@@ -1,11 +1,33 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
+import com.dawidcz.parkinglotsystem.model.Charger;
+import com.dawidcz.parkinglotsystem.model.ChargerTicket;
+import com.dawidcz.parkinglotsystem.service.interfaces.IChargerTicketService;
 
-public class ChargerTicketService implements IChargerService {
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+public class ChargerTicketService implements IChargerTicketService {
+
 
     @Override
-    public void changeChargerOccupancy(boolean status) {
+    public LocalDateTime getDuration() {
+        return null;
+    }
+
+    @Override
+    public BigDecimal calculateFee() {
+        return null;
+    }
+
+    @Override
+    public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime) {
+        return new ChargerTicket(chargerId,entryTime);
+    }
+
+
+    @Override
+    public void finishCharging() {
 
     }
 }

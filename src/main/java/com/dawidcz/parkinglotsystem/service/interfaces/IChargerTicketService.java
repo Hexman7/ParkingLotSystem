@@ -8,6 +8,6 @@ import java.time.LocalDateTime;
 public interface IChargerTicketService {
     LocalDateTime getDuration();
     BigDecimal calculateFee();
-    ChargerTicket createChargerTicket();
+    ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime);
     void finishCharging();
 }

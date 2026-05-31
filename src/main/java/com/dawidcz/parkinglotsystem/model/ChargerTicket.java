@@ -25,4 +25,9 @@ public class ChargerTicket implements Serializable {
     @Column(nullable = true)
     private LocalDateTime leaveTime;
 
+    public ChargerTicket(int chargerId, LocalDateTime entryTime){
+        this.chargerId = chargerId;
+        this.entryTime = entryTime;
+    }
+
 }
