@@ -78,6 +78,6 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     public List<ParkingSlot> getAllSlots(int parkingLotId) {
-        return (List<ParkingSlot>) parkingSlotRepository.getParkingSlots(parkingLotId);
+        return parkingSlotRepository.getParkingSlots(parkingLotId);
     }
 }
