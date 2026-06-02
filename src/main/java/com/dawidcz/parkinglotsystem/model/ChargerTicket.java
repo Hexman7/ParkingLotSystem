@@ -20,14 +20,17 @@ public class ChargerTicket implements Serializable {
     @GeneratedValue
     private Long id;
     private int chargerId;
+    private String licencePlate;
     private LocalDateTime entryTime;
+
 
     @Column(nullable = true)
     private LocalDateTime leaveTime;
 
-    public ChargerTicket(int chargerId, LocalDateTime entryTime){
+    public ChargerTicket(int chargerId, LocalDateTime entryTime,String licencePlate){
         this.chargerId = chargerId;
         this.entryTime = entryTime;
+        this.licencePlate = licencePlate;
     }
 
 }

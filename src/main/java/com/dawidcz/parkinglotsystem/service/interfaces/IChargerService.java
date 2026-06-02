@@ -1,5 +1,5 @@
 package com.dawidcz.parkinglotsystem.service.interfaces;
 
 public interface IChargerService {
-    void changeChargerOccupancy(boolean status);
+    void changeChargerOccupancy(int chargerId, boolean status, String licencePlate);
 }
