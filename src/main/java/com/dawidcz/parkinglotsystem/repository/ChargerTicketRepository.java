@@ -12,4 +12,5 @@ public interface ChargerTicketRepository extends CrudRepository<ChargerTicket,Lo
 
     @Query(value = "SELECT (ct) FROM ChargerTicket ct WHERE ct.chargerId = ?1 AND ct.licencePlate = ?2 AND ct.leaveTime = null")
     Optional<ChargerTicket> getChargerTicket(int chargerId, String licencePlate);
+
 }

@@ -17,7 +17,7 @@ import java.util.List;
 public class ParkingLotController {
 
 
-    public record ReservationRequest(String licensePlate, LocalDateTime entryTime ) {}
+    public record ReservationRequest(String licensePlate) {}
 
     private final ParkingLotService parkingLotService;
     public ParkingLotController(ParkingLotService parkingLotService){
@@ -26,7 +26,7 @@ public class ParkingLotController {
 
     @PostMapping("/enter")
     public ResponseEntity<Ticket> enter(@RequestBody ReservationRequest request, @PathVariable int parkingLotId ) {
-        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,parkingLotId, request.entryTime);
+        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,parkingLotId);
         return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
     }
 

@@ -20,6 +20,7 @@ public class ParkingSlotService implements IParkingSlotService {
         ps.setOccupied(status);
         ps = parkingSlotRepo.save(ps);
         return ps;
+        // change the closest free slot if its closest one
     }
 
     @Override

@@ -1,8 +1,7 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.model.ParkingLot;
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
-import com.dawidcz.parkinglotsystem.model.Ticket;
+import com.dawidcz.parkinglotsystem.model.*;
+import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParkingLotService implements IParkingLotService {
@@ -18,15 +18,17 @@ public class ParkingLotService implements IParkingLotService {
     private final TicketRepository ticketRepository;
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingSlotRepository parkingSlotRepository;
+    private final ChargerTicketRepository chargerTicketRepository;
 
-    public ParkingLotService(TicketRepository ticketRepository, ParkingLotRepository parkingLotRepository, ParkingSlotRepository parkingSlotRepository){
+    public ParkingLotService(TicketRepository ticketRepository, ParkingLotRepository parkingLotRepository, ParkingSlotRepository parkingSlotRepository, ChargerTicketRepository chargerTicketRepository){
         this.ticketRepository = ticketRepository;
         this.parkingLotRepository = parkingLotRepository;
         this.parkingSlotRepository = parkingSlotRepository;
+        this.chargerTicketRepository = chargerTicketRepository;
     }
 
     @Override
-    public Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime) {
+    public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
 //     TO DO:
 //        validation - check if params are not empty
         if(parkingLotRepository.findById(parkingLotId).isEmpty()){
@@ -37,18 +39,22 @@ public class ParkingLotService implements IParkingLotService {
             throw  new RuntimeException("Licence plate value is empty");
         }
 
-        if(entryTime.isAfter(LocalDateTime.now())){
-            throw new RuntimeException("Entry time can't be future");
-        }
-
-        Ticket ticket = new Ticket(parkingLotId,licencePlate, entryTime);
+        Ticket ticket = new Ticket(parkingLotId,licencePlate, LocalDateTime.now());
         ticket = ticketRepository.save(ticket);
         return ticket;
 //      update free slots count
     }
 
     @Override
-    public void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime) {
+    public void onParkingLeave(String licencePlate, int parkingLotId) {
+        Optional<Ticket> ticket = ticketRepository.getTicket(licencePlate,parkingLotId);
+        if(ticket.isEmpty()) throw new RuntimeException("Can't find ticket.");
+        //How to get ChargerTicket? and bind it with leaving Car?
+        //Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicket(licencePlate,parkingLotId);
+
+        ticket.get().setLeaveTime(LocalDateTime.now());
+        ticketRepository.save(ticket.get());
+        //Payment payment = new Payment(ticket.get().getId(),)
 
     }
 

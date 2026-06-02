@@ -24,4 +24,18 @@ public class Payment  implements Serializable {
     private String paymentMethod;
     private String status;
 
+    public Payment(int ticketId, int chargerTickedId, BigDecimal amount, String paymentMethod, String status) {
+        this.ticketId = ticketId;
+        this.chargerTickedId = chargerTickedId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+    }
+
+    public Payment(int ticketId, BigDecimal amount, String paymentMethod, String status) {
+        this.ticketId = ticketId;
+        this.amount = amount;
+        this.paymentMethod = paymentMethod;
+        this.status = status;
+    }
 }
