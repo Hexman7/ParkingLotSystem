@@ -6,6 +6,7 @@ import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,7 +35,7 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     @Override
-    public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
+    public Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime) {
 //     TO DO:
 //        validation - check if params are not empty
         if(parkingLotRepository.findById(parkingLotId).isEmpty()){
@@ -45,20 +46,20 @@ public class ParkingLotService implements IParkingLotService {
             throw  new RuntimeException("Licence plate value is empty");
         }
 
-        Ticket ticket = new Ticket(parkingLotId,licencePlate, LocalDateTime.now());
+        Ticket ticket = new Ticket(parkingLotId,licencePlate, entryTime);
         ticket = ticketRepository.save(ticket);
         return ticket;
 //      update free slots count
     }
 
     @Override
-    public void onParkingLeave(String licencePlate, int parkingLotId) {
+    public void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime) {
         Optional<Ticket> ticket = ticketRepository.getTicket(licencePlate,parkingLotId);
         if(ticket.isEmpty()) throw new RuntimeException("Can't find ticket.");
 
         Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(parkingLotId,licencePlate);
 
-        Ticket savedTicket = ticketService.endParking(ticket.get().getId(),LocalDateTime.now());
+        Ticket savedTicket = ticketService.endParking(ticket.get().getId(),leaveTime);
 
         BigDecimal amount = ticketService.calculateFee(ticket.get().getId());
 

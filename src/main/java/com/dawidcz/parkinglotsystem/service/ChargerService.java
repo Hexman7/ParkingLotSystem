@@ -22,8 +22,8 @@ public class ChargerService implements IChargerService {
 
 
     @Override
-    public void changeChargerOccupancy(int chargerId,boolean status, String licencePlate) {
-        Optional<Charger> charger = chargerRepository.findById(chargerId);
+    public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licencePlate) {
+        Optional<Charger> charger = chargerRepository.getChargerById(parkingLotId,chargerId);
         if(charger.isPresent()){
             charger.get().setOccupied(status);
             chargerRepository.save(charger.get());
@@ -50,5 +50,11 @@ public class ChargerService implements IChargerService {
             chargerTicket.setLeaveTime(LocalDateTime.now());
             chargerTicketRepository.save(chargerTicket);
         }
+    }
+
+    public boolean isAvailable(int chargerId,int parkingLotId){
+        Optional<Charger> charger = chargerRepository.getChargerById(parkingLotId,chargerId);
+        if(charger.isEmpty())throw new RuntimeException("Charger doesn't exist");
+        return charger.get().isOccupied();
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,19 +29,19 @@ public class ParkingLotController {
         this.parkingLotService = parkingLotService;
     }
 
-    public record ReservationRequest (String licensePlate) {}
+    public record ReservationRequest (String licensePlate, LocalDateTime time) {}
 
     @PostMapping("/{id}/enter")
     public ResponseEntity<TicketResponse> enter(@RequestBody ReservationRequest request, @PathVariable int id ) {
-        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id);
+        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id,request.time);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(TicketMapper.toResponse(ticket));
     }
 
     @PostMapping("/{id}/leave")
-    public ResponseEntity<Void> leave(@PathVariable int id, @RequestParam String licensePlate){
-        parkingLotService.onParkingLeave(licensePlate,id);
+    public ResponseEntity<Void> leave(@PathVariable int id, @RequestBody ReservationRequest request){
+        parkingLotService.onParkingLeave(request.licensePlate,id,request.time);
         return ResponseEntity.ok().build();
     }
 
