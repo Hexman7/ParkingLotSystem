@@ -1,10 +1,11 @@
 package com.dawidcz.parkinglotsystem.controller;
 
+import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
+import com.dawidcz.parkinglotsystem.mapper.ParkingSlotMapper;
+import com.dawidcz.parkinglotsystem.model.ParkingSlot;
+import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.service.ParkingSlotService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/parking-lots/{id}/slots")
@@ -17,7 +18,17 @@ public class ParkingSlotController {
     }
 
     @GetMapping("/{slotNumber}/available")
-    public boolean available(@PathVariable int parkingLotId,@PathVariable int slotNumber){
-        return psr.isEmpty(parkingLotId, slotNumber);
+    public boolean available(@PathVariable int id,@PathVariable int slotNumber){
+        return psr.isEmpty(id, slotNumber);
+    }
+
+    @PostMapping("/{slotNumber}/occupy")
+    public ParkingSlotResponse occupy(@PathVariable int id, @PathVariable int slotNumber){
+        return ParkingSlotMapper.toResponse(psr.changeSlotOccupancy(id,slotNumber,true));
+    }
+
+    @PostMapping("/{slotNumber}/free")
+    public ParkingSlotResponse free(@PathVariable int id, @PathVariable int slotNumber){
+        return ParkingSlotMapper.toResponse(psr.changeSlotOccupancy(id,slotNumber,false));
     }
 }
