@@ -1,53 +1,75 @@
 package com.dawidcz.parkinglotsystem.controller;
 
+import com.dawidcz.parkinglotsystem.dto.ParkingLotResponse;
+import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
+import com.dawidcz.parkinglotsystem.dto.TicketResponse;
+import com.dawidcz.parkinglotsystem.mapper.ParkingLotMapper;
+import com.dawidcz.parkinglotsystem.mapper.ParkingSlotMapper;
+import com.dawidcz.parkinglotsystem.mapper.TicketMapper;
 import com.dawidcz.parkinglotsystem.model.ParkingLot;
 import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
-@RequestMapping("/api/v1/parkinglot/{parkingLotId}")
+@RequestMapping("/api/v1/parking-lots")
 public class ParkingLotController {
-
-
-    public record ReservationRequest(String licensePlate) {}
 
     private final ParkingLotService parkingLotService;
     public ParkingLotController(ParkingLotService parkingLotService){
         this.parkingLotService = parkingLotService;
     }
 
-    @PostMapping("/enter")
-    public ResponseEntity<Ticket> enter(@RequestBody ReservationRequest request, @PathVariable int parkingLotId ) {
-        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,parkingLotId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
+    public record ReservationRequest (String licensePlate) {}
+
+    @PostMapping("/{id}/enter")
+    public ResponseEntity<TicketResponse> enter(@RequestBody ReservationRequest request, @PathVariable int id ) {
+        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(TicketMapper.toResponse(ticket));
+    }
+
+    @PostMapping("/{id}/leave")
+    public ResponseEntity<Void> leave(@PathVariable int id, @RequestParam String licensePlate){
+        parkingLotService.onParkingLeave(licensePlate,id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/allLots")
-    public List<ParkingLot> getAll(){
-        return parkingLotService.getAll();
+    public List<ParkingLotResponse> getAll(){
+        return parkingLotService.getAll()
+                .stream()
+                .map(ParkingLotMapper::toResponse)
+                .toList();
     }
 
-    @GetMapping("/allSlots")
-    public List<ParkingSlot> getAllSlots(@PathVariable int parkingLotId){return parkingLotService.getAllSlots(parkingLotId);}
+    @GetMapping("/{id}/slots")
+    public List<ParkingSlotResponse> getAllSlots(@PathVariable int id){
+        return parkingLotService.getAllSlots(id)
+                .stream()
+                .map(ParkingSlotMapper::toResponse)
+                .toList();
+    }
 
-    @GetMapping("/freeSlotsCount")
-    public int getFreeSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getFreeSlotsCount(parkingLotId);}
+    @GetMapping("/{id}/slots/free/count")
+    public int getFreeSlotsCount(@PathVariable int id){return parkingLotService.getFreeSlotsCount(id);}
 
-    @GetMapping("/totalSlotsCount")
-    public int getTotalSlotsCount(@PathVariable int parkingLotId){return parkingLotService.getTotalSlotCount(parkingLotId);}
+    @GetMapping("/{id}/slots/count")
+    public int getTotalSlotsCount(@PathVariable int id){return parkingLotService.getTotalSlotCount(id);}
 
-    @GetMapping("/closestFreeSlot")
-    public int getClosestFreeSlot(@PathVariable int parkingLotId){return parkingLotService.getClosestFreeSlot(parkingLotId);}
+    @GetMapping("/{id}/slots/free/closest")
+    public int getClosestFreeSlot(@PathVariable int id){return parkingLotService.getClosestFreeSlot(id);}
 
-    @GetMapping("/closestEvFreeSlot")
-    public int getClosestEvFreeSlot(@PathVariable int parkingLotId){return parkingLotService.getClosestEvFreeSlot(parkingLotId);}
+    @GetMapping("/{id}/slots/ev/free/closest")
+    public int getClosestEvFreeSlot(@PathVariable int id){return parkingLotService.getClosestEvFreeSlot(id);}
 
 }

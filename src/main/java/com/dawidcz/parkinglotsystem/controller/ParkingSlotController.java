@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/{parkingLotId}/parkingSlot")
+@RequestMapping("/api/v1/parking-lots/{id}/slots")
 public class ParkingSlotController {
 
     private final ParkingSlotService psr;
@@ -16,8 +16,8 @@ public class ParkingSlotController {
         this.psr = parkingSlotService;
     }
 
-    @GetMapping("/{slotNumber}/isEmpty")
-    public boolean isEmpty(@PathVariable int parkingLotId,@PathVariable int slotNumber){
+    @GetMapping("/{slotNumber}/available")
+    public boolean available(@PathVariable int parkingLotId,@PathVariable int slotNumber){
         return psr.isEmpty(parkingLotId, slotNumber);
     }
 }

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public interface IChargerTicketService {
     LocalDateTime getDuration();
-    BigDecimal calculateFee();
+    BigDecimal calculateFee(Long id);
     ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licencePlate);
     void finishCharging();
 }

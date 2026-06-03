@@ -22,8 +22,6 @@ public class ChargerTicket implements Serializable {
     private int chargerId;
     private String licencePlate;
     private LocalDateTime entryTime;
-
-
     @Column(nullable = true)
     private LocalDateTime leaveTime;
 

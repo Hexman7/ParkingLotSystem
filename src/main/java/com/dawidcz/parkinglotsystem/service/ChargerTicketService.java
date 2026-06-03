@@ -16,7 +16,7 @@ public class ChargerTicketService implements IChargerTicketService {
     }
 
     @Override
-    public BigDecimal calculateFee() {
+    public BigDecimal calculateFee(Long id) {
         return null;
     }
 
