@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface TicketRepository extends CrudRepository<Ticket,Long> {
 
 
-    @Query(value = "SELECT (t) FROM Ticket t WHERE t.licencePlate = ?1 AND t.parkingLotId = ?2 AND t.leaveTime = null")
+    @Query(value = "SELECT t FROM Ticket t WHERE t.licensePlate = ?1 AND t.parkingLotId = ?2 AND t.leaveTime is NULL")
     Optional<Ticket> getTicket(String licencePlate, int parkingLotId);
 }

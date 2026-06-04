@@ -3,12 +3,14 @@ package com.dawidcz.parkinglotsystem.service;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.ITicketService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Service
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
 

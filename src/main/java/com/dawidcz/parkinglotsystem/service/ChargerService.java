@@ -2,14 +2,14 @@ package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.model.Charger;
 import com.dawidcz.parkinglotsystem.model.ChargerTicket;
-import com.dawidcz.parkinglotsystem.model.Payment;
 import com.dawidcz.parkinglotsystem.repository.ChargerRepository;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
+@Service
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
