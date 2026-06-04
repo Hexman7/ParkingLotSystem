@@ -54,14 +54,14 @@ public class ParkingLotService implements IParkingLotService {
 
     @Override
     public void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime) {
-        Optional<Ticket> ticket = ticketRepository.getTicket(licencePlate,parkingLotId);
-        if(ticket.isEmpty()) throw new RuntimeException("Can't find ticket.");
+        Ticket ticket = ticketRepository.getTicket(licencePlate,parkingLotId)
+                .orElseThrow(()->new RuntimeException("Can't find ticket."));
 
         Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(parkingLotId,licencePlate);
 
-        Ticket savedTicket = ticketService.endParking(ticket.get().getId(),leaveTime);
+        Ticket savedTicket = ticketService.endParking(ticket.getId(),leaveTime);
 
-        BigDecimal amount = ticketService.calculateFee(ticket.get().getId());
+        BigDecimal amount = ticketService.calculateFee(ticket.getId());
 
         if(chargerTicket.isPresent()){
             amount = amount.add(chargerTicketService.calculateFee(chargerTicket.get().getId()));
