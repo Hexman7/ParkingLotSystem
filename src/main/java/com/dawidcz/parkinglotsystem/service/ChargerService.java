@@ -23,12 +23,11 @@ public class ChargerService implements IChargerService {
 
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licencePlate) {
-        Optional<Charger> charger = chargerRepository.getChargerById(parkingLotId,chargerId);
-        if(charger.isPresent()){
-            charger.get().setOccupied(status);
-            chargerRepository.save(charger.get());
-        }
-        else throw new RuntimeException("Invalid Charger ID");
+        Charger charger = chargerRepository.getChargerById(parkingLotId,chargerId)
+                .orElseThrow(() -> new RuntimeException("Can't find charger"));
+
+        charger.setOccupied(status);
+        chargerRepository.save(charger);
 
         if(status){
             onChargingStart(chargerId,licencePlate);
@@ -44,17 +43,16 @@ public class ChargerService implements IChargerService {
     }
 
     private void onChargingEnd(int chargerId,String licencePlate){
-        Optional<ChargerTicket> chargerTicketOpt = chargerTicketRepository.getChargerTicket(chargerId,licencePlate);
-        if(chargerTicketOpt.isPresent()){
-            ChargerTicket chargerTicket = chargerTicketOpt.get();
+        ChargerTicket chargerTicket = chargerTicketRepository.getChargerTicket(chargerId,licencePlate)
+                .orElseThrow(()-> new RuntimeException("Can't find charger ticket."));
             chargerTicket.setLeaveTime(LocalDateTime.now());
             chargerTicketRepository.save(chargerTicket);
-        }
+
     }
 
     public boolean isAvailable(int chargerId,int parkingLotId){
-        Optional<Charger> charger = chargerRepository.getChargerById(parkingLotId,chargerId);
-        if(charger.isEmpty())throw new RuntimeException("Charger doesn't exist");
-        return charger.get().isOccupied();
+        Charger charger = chargerRepository.getChargerById(parkingLotId,chargerId)
+                .orElseThrow(()->new RuntimeException("Charger doesn't exist"));
+        return charger.isOccupied();
     }
 }
