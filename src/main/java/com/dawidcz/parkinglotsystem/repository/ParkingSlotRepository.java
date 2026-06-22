@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface ParkingSlotRepository extends CrudRepository<ParkingSlot,Integer> {
 
-    ParkingSlot getParkingSlotBySlotNumber(int parkingLotId, int slotNumber);
+    ParkingSlot getParkingSlotBySlotNumberAndParkingLotId(int parkingLotId, int slotNumber);
 
  //   @Query(value = "SELECT COUNT(ps) FROM ParkingSlot ps WHERE ps.isOccupied=false AND ps.parkingLot.id = ?1")
     int countByIsOccupiedFalseAndParkingLotId(int parkingLotId);
@@ -27,6 +27,6 @@ public interface ParkingSlotRepository extends CrudRepository<ParkingSlot,Intege
     @Query(value = "SELECT ps.slotNumber FROM ParkingSlot ps WHERE ps.isOccupied=false AND ps.parkingLot.id = ?1  AND isEvCompatible = true ORDER BY distanceToEntry ASC LIMIT 1")
     int getClosestEvFreeSlot(int parkingLotId);
 
-   // @Query(value = "SELECT ps.isOccupied FROM ParkingSlot ps WHERE ps.parkingLot.id = ?1 AND ps.slotNumber = ?2")
-    boolean existsByParkingLotIdAndSlotNumberAndIsOccupiedFalse(int parkingLotId, int slotNumber);
+    @Query(value = "SELECT ps.isOccupied FROM ParkingSlot ps WHERE ps.parkingLot.id = ?1 AND ps.slotNumber = ?2")
+    boolean getByParkingLotIdAndSlotNumber(int parkingLotId, int slotNumber);
 }

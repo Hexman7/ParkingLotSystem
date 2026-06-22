@@ -5,12 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,13 +26,13 @@ public class ChargerTicket implements Serializable {
     private LocalDateTime entryTime;
     @Column(nullable = true)
     private LocalDateTime leaveTime;
-    private Boolean isPaid;
+    private Boolean isPaid = false;
 
-    public ChargerTicket(int chargerId, LocalDateTime entryTime,String licencePlate){
-        this.chargerId = chargerId;
-        this.entryTime = entryTime;
-        this.licencePlate = licencePlate;
-        this.isPaid  = false;
-    }
+//    public ChargerTicket(int chargerId, LocalDateTime entryTime,String licencePlate){
+//        this.chargerId = chargerId;
+//        this.entryTime = entryTime;
+//        this.licencePlate = licencePlate;
+//        this.isPaid  = false;
+//    }
 
 }

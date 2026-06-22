@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public interface IParkingLotService {
 
-    Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime);
-    void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime);
+    Ticket onParkingEnter(String licencePlate, int parkingLotId);
+    void onParkingLeave(String licencePlate, int parkingLotId);
     int getClosestFreeSlot(int parkingSlotId);
     int getClosestEvFreeSlot(int parkingSlotId);
     int getFreeSlotsCount(int parkingLotId);

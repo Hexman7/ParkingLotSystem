@@ -3,12 +3,13 @@ package com.dawidcz.parkinglotsystem.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,8 +31,8 @@ public class Charger implements Serializable {
     @JoinColumn(name = "parking_lot_id")
     private ParkingLot parkingLot;
 
-    public Charger(ParkingSlot parkingSlot, boolean isOccupied) {
-        this.parkingSlot = parkingSlot;
-        this.isOccupied = isOccupied;
-    }
+//    public Charger(ParkingSlot parkingSlot, boolean isOccupied) {
+//        this.parkingSlot = parkingSlot;
+//        this.isOccupied = isOccupied;
+//    }
 }

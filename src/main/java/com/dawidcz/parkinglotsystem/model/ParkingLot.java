@@ -2,6 +2,7 @@ package com.dawidcz.parkinglotsystem.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,15 +39,6 @@ public class ParkingLot  implements Serializable {
         this.streetAddress = streetAddress;
     }
 
-    @Override
-    public String toString() {
-        return "ParkingLot{" +
-                "parkingLotID=" + id +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", streetAddress='" + streetAddress + '\'' +
-                '}';
-    }
 
 
 }

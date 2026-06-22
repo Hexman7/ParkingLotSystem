@@ -16,7 +16,7 @@ public class ParkingSlotService implements IParkingSlotService {
 
     @Override
     public ParkingSlot changeSlotOccupancy(int parkingLotId, int slotNumber, boolean status) {
-        ParkingSlot ps = parkingSlotRepo.getParkingSlotBySlotNumber(parkingLotId,slotNumber);
+        ParkingSlot ps = parkingSlotRepo.getParkingSlotBySlotNumberAndParkingLotId(parkingLotId,slotNumber);
         ps.setOccupied(status);
         ps = parkingSlotRepo.save(ps);
         return ps;
@@ -25,6 +25,6 @@ public class ParkingSlotService implements IParkingSlotService {
 
     @Override
     public Boolean isEmpty(int parkingLotId, int slotNumber) {
-        return parkingSlotRepo.existsByParkingLotIdAndSlotNumberAndIsOccupiedFalse(parkingLotId,slotNumber);
+        return parkingSlotRepo.getByParkingLotIdAndSlotNumber(parkingLotId,slotNumber);
     }
 }

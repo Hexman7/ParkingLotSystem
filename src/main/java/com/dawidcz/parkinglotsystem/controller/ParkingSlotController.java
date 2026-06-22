@@ -14,9 +14,9 @@ public class ParkingSlotController {
         this.psr = parkingSlotService;
     }
 
-    @GetMapping("/{slotNumber}/available")
-    public boolean available(@PathVariable int id,@PathVariable int slotNumber){
-        return !psr.isEmpty(id, slotNumber);
+    @GetMapping("/{slotNumber}/is-occupied")
+    public boolean isOccupied(@PathVariable int id,@PathVariable int slotNumber){
+        return psr.isEmpty(id, slotNumber);
     }
 
     @PostMapping("/{slotNumber}/occupy")

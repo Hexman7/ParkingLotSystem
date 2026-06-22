@@ -2,11 +2,13 @@ package com.dawidcz.parkinglotsystem.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,16 +36,16 @@ public class ParkingSlot  implements Serializable {
         this.isOccupied = isOccupied;
         this.isEvCompatible = isEvCompatible;
     }
-
-    @Override
-    public String toString() {
-        return "ParkingSlot{" +
-                "id=" + id +
-                ", slotNumber=" + slotNumber +
-                ", parkingLotId=" + parkingLot.getId() +
-                ", distanceToEntry=" + distanceToEntry +
-                ", isOccupied=" + isOccupied +
-                ", isEvCompatible=" + isEvCompatible +
-                '}';
-    }
+//
+//    @Override
+//    public String toString() {
+//        return "ParkingSlot{" +
+//                "id=" + id +
+//                ", slotNumber=" + slotNumber +
+//                ", parkingLotId=" + parkingLot.getId() +
+//                ", distanceToEntry=" + distanceToEntry +
+//                ", isOccupied=" + isOccupied +
+//                ", isEvCompatible=" + isEvCompatible +
+//                '}';
+//    }
 }

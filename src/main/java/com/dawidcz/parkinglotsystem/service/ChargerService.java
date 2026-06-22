@@ -43,8 +43,13 @@ public class ChargerService implements IChargerService {
     }
 
     private void onChargingStart(int chargerId, String licencePlate){
-        ChargerTicket chargerTicket = new ChargerTicket(chargerId, LocalDateTime.now(), licencePlate);
-        chargerTicketRepository.save(chargerTicket);
+//        ChargerTicket chargerTicket = new ChargerTicket(chargerId, LocalDateTime.now(), licencePlate);
+        chargerTicketRepository.save(
+                ChargerTicket.builder()
+                        .chargerId(chargerId)
+                        .entryTime(LocalDateTime.now())
+                        .licencePlate(licencePlate)
+                .build());
     }
 
     private void onChargingEnd(int chargerId,String licencePlate){
@@ -61,6 +66,6 @@ public class ChargerService implements IChargerService {
     }
 
     public List<Charger> getChargers(int parkingLotId){
-        return chargerRepository.getChargers(parkingLotId);
+        return chargerRepository.findByParkingLotId(parkingLotId);
     }
 }

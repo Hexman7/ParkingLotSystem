@@ -4,12 +4,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,18 +26,18 @@ public class Payment  implements Serializable {
     private String paymentMethod;
     private String status;
 
-    public Payment(Long ticketId, Long chargerTickedId, BigDecimal amount, String paymentMethod, String status) {
-        this.ticketId = ticketId;
-        this.chargerTickedId = chargerTickedId;
-        this.amount = amount;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-    }
-
-    public Payment(Long ticketId, BigDecimal amount, String paymentMethod, String status) {
-        this.ticketId = ticketId;
-        this.amount = amount;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-    }
+//    public Payment(Long ticketId, Long chargerTickedId, BigDecimal amount, String paymentMethod, String status) {
+//        this.ticketId = ticketId;
+//        this.chargerTickedId = chargerTickedId;
+//        this.amount = amount;
+//        this.paymentMethod = paymentMethod;
+//        this.status = status;
+//    }
+//
+//    public Payment(Long ticketId, BigDecimal amount, String paymentMethod, String status) {
+//        this.ticketId = ticketId;
+//        this.amount = amount;
+//        this.paymentMethod = paymentMethod;
+//        this.status = status;
+//    }
 }

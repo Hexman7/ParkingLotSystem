@@ -39,7 +39,7 @@ public class ParkingLotService implements IParkingLotService {
 
     @Transactional
     @Override
-    public Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime) {
+    public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
         // Entry time comes from the system not request
 //     TO DO:
 //        validation - check if params are not empty
@@ -52,28 +52,42 @@ public class ParkingLotService implements IParkingLotService {
         return ticketRepository.save(Ticket.builder()
                 .parkingLotId(parkingLotId)
                 .licensePlate(licencePlate)
-                .entryTime(entryTime)
+                .entryTime(LocalDateTime.now())
                 .build());
 //      update free slots count
     }
 
     @Override
-    public void onParkingLeave(String licencePlate, int parkingLotId, LocalDateTime leaveTime) {
+    public void onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketRepository.getTicket(licencePlate,parkingLotId)
                 .orElseThrow(()->new RuntimeException("Can't find ticket."));
 
         Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(licencePlate);
 
-        Ticket savedTicket = ticketService.endParking(ticket.getId(),leaveTime);
+        Ticket savedTicket = ticketService.endParking(ticket.getId(),LocalDateTime.now());
 
         BigDecimal amount = ticketService.calculateFee(ticket.getId());
+        Payment payment;
+
 
         if(chargerTicket.isPresent()){
             amount = amount.add(chargerTicketService.calculateFee(chargerTicket.get().getId()));
-            Payment payment = new Payment(savedTicket.getId(),chargerTicket.get().getId(),amount,"method","in progress");
+            payment = Payment.builder()
+                    .ticketId(savedTicket.getId())
+                    .chargerTickedId(chargerTicket.get().getId())
+                    .amount(amount)
+                    .paymentMethod("method")
+                    .status("in progress")
+                    .build();
         }
         else{
-            Payment payment = new Payment(savedTicket.getId(),null,amount,"method","in progress");
+            payment = Payment.builder()
+                    .ticketId(savedTicket.getId())
+                    .chargerTickedId(null)
+                    .amount(amount)
+                    .paymentMethod("method")
+                    .status("in progress")
+                    .build();
         }
 
 

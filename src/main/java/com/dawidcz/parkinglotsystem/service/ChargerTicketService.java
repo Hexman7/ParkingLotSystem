@@ -24,7 +24,11 @@ public class ChargerTicketService implements IChargerTicketService {
 
     @Override
     public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licencePlate) {
-        return new ChargerTicket(chargerId,entryTime,licencePlate);
+        return ChargerTicket.builder()
+                .chargerId(chargerId)
+                .entryTime(entryTime)
+                .licencePlate(licencePlate)
+                .build();
     }
 
 

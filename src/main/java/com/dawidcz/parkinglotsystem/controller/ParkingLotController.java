@@ -22,12 +22,11 @@ public class ParkingLotController {
         this.parkingLotService = parkingLotService;
     }
 
-    public record ReservationRequest (String licensePlate, LocalDateTime time) {}
+    public record ReservationRequest (String licensePlate) {}
 
     @PostMapping("/{id}/enter")
     public ResponseEntity<TicketResponse> enter(@RequestBody ReservationRequest request, @PathVariable int id ) {
-        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id,request.time);
-        System.out.println(request.time);
+        Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(TicketResponse.toResponse(ticket));
@@ -35,7 +34,7 @@ public class ParkingLotController {
 
     @PostMapping("/{id}/leave")
     public ResponseEntity<Void> leave(@PathVariable int id, @RequestBody ReservationRequest request){
-        parkingLotService.onParkingLeave(request.licensePlate,id,request.time);
+        parkingLotService.onParkingLeave(request.licensePlate,id);
         return ResponseEntity.ok().build();
     }
 

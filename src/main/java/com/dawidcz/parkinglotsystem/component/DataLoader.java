@@ -52,9 +52,21 @@ public class DataLoader {
 
         chr.saveAll(
                 List.of(
-                        new Charger(evPs1,false),
-                        new Charger(evPs2,false),
-                        new Charger(evPs3,false)
+                        Charger.builder()
+                                .parkingSlot(evPs1)
+                                .parkingLot(evPs1.getParkingLot())
+                                .isOccupied(false)
+                            .build(),
+                        Charger.builder()
+                                .parkingSlot(evPs2)
+                                .parkingLot(evPs2.getParkingLot())
+                                .isOccupied(false)
+                            .build(),
+                        Charger.builder()
+                                .parkingSlot(evPs3)
+                                .parkingLot(evPs3.getParkingLot())
+                                .isOccupied(false)
+                            .build()
                 )
         );
 
