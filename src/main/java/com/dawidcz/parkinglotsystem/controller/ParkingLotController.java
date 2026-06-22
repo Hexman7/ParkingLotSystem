@@ -6,18 +6,14 @@ import com.dawidcz.parkinglotsystem.dto.TicketResponse;
 import com.dawidcz.parkinglotsystem.mapper.ParkingLotMapper;
 import com.dawidcz.parkinglotsystem.mapper.ParkingSlotMapper;
 import com.dawidcz.parkinglotsystem.mapper.TicketMapper;
-import com.dawidcz.parkinglotsystem.model.ParkingLot;
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -34,6 +30,7 @@ public class ParkingLotController {
     @PostMapping("/{id}/enter")
     public ResponseEntity<TicketResponse> enter(@RequestBody ReservationRequest request, @PathVariable int id ) {
         Ticket ticket = parkingLotService.onParkingEnter(request.licensePlate,id,request.time);
+        System.out.println(request.time);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(TicketMapper.toResponse(ticket));

@@ -8,6 +8,7 @@ import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ChargerService implements IChargerService {
@@ -23,9 +24,13 @@ public class ChargerService implements IChargerService {
 
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licencePlate) {
-        Charger charger = chargerRepository.getChargerById(parkingLotId,chargerId)
+        Charger charger = chargerRepository.getChargerById(chargerId)
                 .orElseThrow(() -> new RuntimeException("Can't find charger"));
 
+        if(charger.isOccupied() == status)
+        {
+            throw new RuntimeException("Charger is already in that status");
+        }
         charger.setOccupied(status);
         chargerRepository.save(charger);
 
@@ -49,9 +54,13 @@ public class ChargerService implements IChargerService {
             chargerTicketRepository.save(chargerTicket);
     }
 
-    public boolean isAvailable(int chargerId,int parkingLotId){
-        Charger charger = chargerRepository.getChargerById(parkingLotId,chargerId)
+    public boolean isOccupied(int chargerId, int parkingLotId){
+        Charger charger = chargerRepository.getChargerById(chargerId)
                 .orElseThrow(()->new RuntimeException("Charger doesn't exist"));
         return charger.isOccupied();
+    }
+
+    public List<Charger> getChargers(int parkingLotId){
+        return chargerRepository.getChargers(parkingLotId);
     }
 }

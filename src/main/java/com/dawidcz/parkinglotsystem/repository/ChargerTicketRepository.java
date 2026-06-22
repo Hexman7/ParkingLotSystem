@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ChargerTicketRepository extends CrudRepository<ChargerTicket,Long> {
 
-    @Query(value = "SELECT (ct) FROM ChargerTicket ct WHERE ct.chargerId = ?1 AND ct.licencePlate = ?2 AND ct.leaveTime = null")
+    @Query(value = "SELECT (ct) FROM ChargerTicket ct WHERE ct.chargerId = ?1 AND ct.licencePlate = ?2 AND ct.leaveTime is NULL")
     Optional<ChargerTicket> getChargerTicket(int chargerId, String licencePlate);
 
     @Query(value = "SELECT (ct) FROM ChargerTicket ct WHERE ct.licencePlate = ?1 AND ct.isPaid = false")

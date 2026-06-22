@@ -1,14 +1,14 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +21,11 @@ public class ParkingLot  implements Serializable {
     private String name;
     private String city;
     private String streetAddress;
+
+    @OneToMany(mappedBy = "parkingLot",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ParkingSlot> parkingSlots = new ArrayList<>();
 
     public ParkingLot(String name, String city, String streetAddress){
         this.name = name;

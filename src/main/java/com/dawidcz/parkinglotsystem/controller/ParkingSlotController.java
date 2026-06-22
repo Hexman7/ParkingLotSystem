@@ -19,7 +19,7 @@ public class ParkingSlotController {
 
     @GetMapping("/{slotNumber}/available")
     public boolean available(@PathVariable int id,@PathVariable int slotNumber){
-        return psr.isEmpty(id, slotNumber);
+        return !psr.isEmpty(id, slotNumber);
     }
 
     @PostMapping("/{slotNumber}/occupy")

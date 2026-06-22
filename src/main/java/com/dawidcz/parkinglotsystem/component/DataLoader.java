@@ -27,23 +27,25 @@ public class DataLoader {
     //method invoked during the startup
     @PostConstruct
     public void loadData() {
-        plr.save( new ParkingLot("Parking Katowice","Katowice","Sokolska 34"));
-        plr.save( new ParkingLot("Parking Warszawa","Warszawa","Dworcowa 5"));
+        ParkingLot pl1 = new ParkingLot("Parking Katowice","Katowice","Sokolska 34");
+        ParkingLot pl2 = new ParkingLot("Parking Warszawa","Warszawa","Dworcowa 5");
+        plr.save( pl1);
+        plr.save( pl2);
 
-        ParkingSlot evPs1 = new ParkingSlot(2,2,5,true,true);
-        ParkingSlot evPs2 = new ParkingSlot(4,1,18,false,true);
-        ParkingSlot evPs3 = new ParkingSlot(5,2,5,false,true);
+        ParkingSlot evPs1 = new ParkingSlot(2,pl2,5,true,true);
+        ParkingSlot evPs2 = new ParkingSlot(4,pl1,18,false,true);
+        ParkingSlot evPs3 = new ParkingSlot(5,pl2,5,false,true);
 
         psr.saveAll( List.of(
-                new ParkingSlot(1,1,10,false,false),
-                new ParkingSlot(2,1,12,false,false),
-                new ParkingSlot(3,1,15,true,false),
-                evPs2,
-                new ParkingSlot(5,1,5,false,false),
-                new ParkingSlot(1,2,5,false,false),
+                new ParkingSlot(1,pl1,10,false,false),
+                new ParkingSlot(2,pl1,12,false,false),
+                new ParkingSlot(3,pl1,15,true,false),
                 evPs1,
-                new ParkingSlot(3,2,5,false,false),
-                new ParkingSlot(4,2,5,true,false),
+                new ParkingSlot(5,pl1,5,false,false),
+                new ParkingSlot(1,pl2,5,false,false),
+                evPs2,
+                new ParkingSlot(3,pl2,5,false,false),
+                new ParkingSlot(4,pl2,5,true,false),
                 evPs3
                 )
         );

@@ -1,9 +1,6 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,17 +16,20 @@ public class ParkingSlot  implements Serializable {
     @GeneratedValue
     private int id;
     private int slotNumber;
-    private int parkingLotId;
     private double distanceToEntry;
     private boolean isOccupied;
     private boolean isEvCompatible;
 
+    @ManyToOne
+    @JoinColumn(name = "parking_lot_id")
+    private ParkingLot parkingLot;
+
     @OneToOne(mappedBy = "parkingSlot")
     private Charger charger;
 
-    public ParkingSlot(int slotNumber, int parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
+    public ParkingSlot(int slotNumber, ParkingLot parkingLot, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
         this.slotNumber = slotNumber;
-        this.parkingLotId = parkingLotId;
+        this.parkingLot = parkingLot;
         this.distanceToEntry = distanceToEntry;
         this.isOccupied = isOccupied;
         this.isEvCompatible = isEvCompatible;
@@ -40,7 +40,7 @@ public class ParkingSlot  implements Serializable {
         return "ParkingSlot{" +
                 "id=" + id +
                 ", slotNumber=" + slotNumber +
-                ", parkingLotId=" + parkingLotId +
+                ", parkingLotId=" + parkingLot.getId() +
                 ", distanceToEntry=" + distanceToEntry +
                 ", isOccupied=" + isOccupied +
                 ", isEvCompatible=" + isEvCompatible +
