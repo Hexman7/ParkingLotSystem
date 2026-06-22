@@ -47,7 +47,6 @@ public class ChargerService implements IChargerService {
                 .orElseThrow(()-> new RuntimeException("Can't find charger ticket."));
             chargerTicket.setLeaveTime(LocalDateTime.now());
             chargerTicketRepository.save(chargerTicket);
-
     }
 
     public boolean isAvailable(int chargerId,int parkingLotId){

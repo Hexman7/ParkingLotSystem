@@ -3,6 +3,7 @@ package com.dawidcz.parkinglotsystem.model;
 import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,9 @@ public class ParkingSlot  implements Serializable {
     private double distanceToEntry;
     private boolean isOccupied;
     private boolean isEvCompatible;
+
+    @OneToOne(mappedBy = "parkingSlot")
+    private Charger charger;
 
     public ParkingSlot(int slotNumber, int parkingLotId, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
         this.slotNumber = slotNumber;

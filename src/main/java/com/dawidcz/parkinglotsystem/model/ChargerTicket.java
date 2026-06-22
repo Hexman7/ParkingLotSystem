@@ -24,11 +24,13 @@ public class ChargerTicket implements Serializable {
     private LocalDateTime entryTime;
     @Column(nullable = true)
     private LocalDateTime leaveTime;
+    private Boolean isPaid;
 
     public ChargerTicket(int chargerId, LocalDateTime entryTime,String licencePlate){
         this.chargerId = chargerId;
         this.entryTime = entryTime;
         this.licencePlate = licencePlate;
+        this.isPaid  = false;
     }
 
 }

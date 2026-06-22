@@ -57,19 +57,19 @@ public class ParkingLotService implements IParkingLotService {
         Ticket ticket = ticketRepository.getTicket(licencePlate,parkingLotId)
                 .orElseThrow(()->new RuntimeException("Can't find ticket."));
 
-//        Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(parkingLotId,licencePlate);
+        Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(licencePlate);
 
         Ticket savedTicket = ticketService.endParking(ticket.getId(),leaveTime);
 
         BigDecimal amount = ticketService.calculateFee(ticket.getId());
 
-//        if(chargerTicket.isPresent()){
-//            amount = amount.add(chargerTicketService.calculateFee(chargerTicket.get().getId()));
-//            Payment payment = new Payment(savedTicket.getId(),chargerTicket.get().getId(),amount,"method","in progress");
-//        }
-//        else{
+        if(chargerTicket.isPresent()){
+            amount = amount.add(chargerTicketService.calculateFee(chargerTicket.get().getId()));
+            Payment payment = new Payment(savedTicket.getId(),chargerTicket.get().getId(),amount,"method","in progress");
+        }
+        else{
             Payment payment = new Payment(savedTicket.getId(),null,amount,"method","in progress");
-//        }
+        }
 
 
     }
