@@ -12,11 +12,7 @@ import java.util.Optional;
 @Repository
 public interface ChargerRepository extends CrudRepository<Charger,Integer> {
 
-//    Optional<Charger> getChargerById(int parkingLotId, int id);
-
-
     Optional<Charger> getChargerById(int id);
 
-    @Query(value = "SELECT ch FROM Charger ch WHERE ch.parkingSlot.parkingLot.id  = ?1")
     List<Charger> getChargers(int parkingLotId);
 }

@@ -1,7 +1,6 @@
 package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.dto.ChargerResponse;
-import com.dawidcz.parkinglotsystem.mapper.ChargerMapper;
 import com.dawidcz.parkinglotsystem.service.ChargerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +37,7 @@ public class ChargerController {
     public List<ChargerResponse> getAllSlots(@PathVariable int parkingLotId){
         return chargerService.getChargers(parkingLotId)
                 .stream()
-                .map(ChargerMapper::toResponse)
+                .map(ChargerResponse::toResponse)
                 .toList();
     }
 }

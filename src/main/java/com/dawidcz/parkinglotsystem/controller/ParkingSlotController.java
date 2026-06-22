@@ -1,9 +1,6 @@
 package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
-import com.dawidcz.parkinglotsystem.mapper.ParkingSlotMapper;
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
-import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.service.ParkingSlotService;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,11 +21,11 @@ public class ParkingSlotController {
 
     @PostMapping("/{slotNumber}/occupy")
     public ParkingSlotResponse occupy(@PathVariable int id, @PathVariable int slotNumber){
-        return ParkingSlotMapper.toResponse(psr.changeSlotOccupancy(id,slotNumber,true));
+        return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,true));
     }
 
     @PostMapping("/{slotNumber}/free")
     public ParkingSlotResponse free(@PathVariable int id, @PathVariable int slotNumber){
-        return ParkingSlotMapper.toResponse(psr.changeSlotOccupancy(id,slotNumber,false));
+        return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,false));
     }
 }

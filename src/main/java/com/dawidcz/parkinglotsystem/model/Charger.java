@@ -19,10 +19,16 @@ public class Charger implements Serializable {
     @GeneratedValue
     private int id;
 
+    // ONE charger → ONE parking slot
     @OneToOne
-    @JoinColumn(name = "parking_slot_id")
+    @JoinColumn(name = "parking_slot_id", unique = true)
     private ParkingSlot parkingSlot;
     private boolean isOccupied;
+
+    // MANY chargers → ONE parking lot
+    @ManyToOne
+    @JoinColumn(name = "parking_lot_id")
+    private ParkingLot parkingLot;
 
     public Charger(ParkingSlot parkingSlot, boolean isOccupied) {
         this.parkingSlot = parkingSlot;

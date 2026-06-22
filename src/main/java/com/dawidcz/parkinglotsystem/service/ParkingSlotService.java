@@ -25,6 +25,6 @@ public class ParkingSlotService implements IParkingSlotService {
 
     @Override
     public Boolean isEmpty(int parkingLotId, int slotNumber) {
-        return parkingSlotRepo.isEmpty(parkingLotId,slotNumber);
+        return parkingSlotRepo.existsByParkingLotIdAndSlotNumberAndIsOccupiedFalse(parkingLotId,slotNumber);
     }
 }

@@ -6,8 +6,9 @@ import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
-import org.springframework.cglib.core.Local;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ParkingLotService implements IParkingLotService {
 
     private final TicketRepository ticketRepository;
@@ -25,30 +27,33 @@ public class ParkingLotService implements IParkingLotService {
     private final ChargerTicketService chargerTicketService;
 
 
-    public ParkingLotService(TicketRepository ticketRepository, ParkingLotRepository parkingLotRepository, ParkingSlotRepository parkingSlotRepository, ChargerTicketRepository chargerTicketRepository){
-        this.ticketRepository = ticketRepository;
-        this.parkingLotRepository = parkingLotRepository;
-        this.parkingSlotRepository = parkingSlotRepository;
-        this.chargerTicketRepository = chargerTicketRepository;
-        this.ticketService =  new TicketService(ticketRepository);
-        this.chargerTicketService =  new ChargerTicketService();
-    }
+//    public ParkingLotService(TicketRepository ticketRepository, ParkingLotRepository parkingLotRepository, ParkingSlotRepository parkingSlotRepository, ChargerTicketRepository chargerTicketRepository){
+//        this.ticketRepository = ticketRepository;
+//        this.parkingLotRepository = parkingLotRepository;
+//        this.parkingSlotRepository = parkingSlotRepository;
+//        this.chargerTicketRepository = chargerTicketRepository;
+//        this.ticketService =  new TicketService(ticketRepository);
+//        this.chargerTicketService =  new ChargerTicketService();
+//    }
+//    removed because of @RequiredArgsConstructor
 
+    @Transactional
     @Override
     public Ticket onParkingEnter(String licencePlate, int parkingLotId, LocalDateTime entryTime) {
+        // Entry time comes from the system not request
 //     TO DO:
 //        validation - check if params are not empty
-        if(parkingLotRepository.findById(parkingLotId).isEmpty()){
-            throw new RuntimeException("Invalid Parking Lot ID");
-        }
+        parkingLotRepository.findById(parkingLotId).orElseThrow(()->new RuntimeException("Can't find ticket."));
 
         if(licencePlate.isBlank()){
             throw  new RuntimeException("Licence plate value is empty");
         }
 
-        Ticket ticket = new Ticket(parkingLotId,licencePlate, entryTime);
-        ticket = ticketRepository.save(ticket);
-        return ticket;
+        return ticketRepository.save(Ticket.builder()
+                .parkingLotId(parkingLotId)
+                .licensePlate(licencePlate)
+                .entryTime(entryTime)
+                .build());
 //      update free slots count
     }
 
@@ -84,11 +89,11 @@ public class ParkingLotService implements IParkingLotService {
 
     @Override
     public int getFreeSlotsCount(int parkingLotId) {
-        return parkingSlotRepository.getFreeSlotsCount(parkingLotId);
+        return parkingSlotRepository.countByIsOccupiedFalseAndParkingLotId(parkingLotId);
     }
 
     @Override
-    public int getTotalSlotCount(int parkingLotId) {return parkingSlotRepository.getTotalSlotCount(parkingLotId);}
+    public int getTotalSlotCount(int parkingLotId) {return parkingSlotRepository.countByParkingLotId(parkingLotId);}
 
     @Override
     public void processPayment() {
@@ -100,6 +105,6 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     public List<ParkingSlot> getAllSlots(int parkingLotId) {
-        return parkingSlotRepository.getParkingSlots(parkingLotId);
+        return parkingSlotRepository.findByParkingLotId(parkingLotId);
     }
 }

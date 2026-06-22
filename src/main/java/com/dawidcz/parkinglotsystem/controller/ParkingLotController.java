@@ -3,9 +3,6 @@ package com.dawidcz.parkinglotsystem.controller;
 import com.dawidcz.parkinglotsystem.dto.ParkingLotResponse;
 import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
 import com.dawidcz.parkinglotsystem.dto.TicketResponse;
-import com.dawidcz.parkinglotsystem.mapper.ParkingLotMapper;
-import com.dawidcz.parkinglotsystem.mapper.ParkingSlotMapper;
-import com.dawidcz.parkinglotsystem.mapper.TicketMapper;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
 import org.springframework.http.HttpStatus;
@@ -33,7 +30,7 @@ public class ParkingLotController {
         System.out.println(request.time);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(TicketMapper.toResponse(ticket));
+                .body(TicketResponse.toResponse(ticket));
     }
 
     @PostMapping("/{id}/leave")
@@ -46,7 +43,7 @@ public class ParkingLotController {
     public List<ParkingLotResponse> getAll(){
         return parkingLotService.getAll()
                 .stream()
-                .map(ParkingLotMapper::toResponse)
+                .map(ParkingLotResponse::toResponse)
                 .toList();
     }
 
@@ -54,7 +51,7 @@ public class ParkingLotController {
     public List<ParkingSlotResponse> getAllSlots(@PathVariable int id){
         return parkingLotService.getAllSlots(id)
                 .stream()
-                .map(ParkingSlotMapper::toResponse)
+                .map(ParkingSlotResponse::toResponse)
                 .toList();
     }
 
