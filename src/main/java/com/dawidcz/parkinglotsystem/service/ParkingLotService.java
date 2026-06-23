@@ -43,14 +43,14 @@ public class ParkingLotService implements IParkingLotService {
         // Entry time comes from the system not request
 //     TO DO:
 //        validation - check if params are not empty
-        parkingLotRepository.findById(parkingLotId).orElseThrow(()->new RuntimeException("Can't find ticket."));
+        ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId).orElseThrow(()->new RuntimeException("Can't find ticket."));
 
         if(licencePlate.isBlank()){
             throw  new RuntimeException("Licence plate value is empty");
         }
 
         return ticketRepository.save(Ticket.builder()
-                .parkingLotId(parkingLotId)
+                .parkingLot(parkingLot)
                 .licensePlate(licencePlate)
                 .entryTime(LocalDateTime.now())
                 .build());
@@ -59,7 +59,7 @@ public class ParkingLotService implements IParkingLotService {
 
     @Override
     public void onParkingLeave(String licencePlate, int parkingLotId) {
-        Ticket ticket = ticketRepository.getTicket(licencePlate,parkingLotId)
+        Ticket ticket = ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
                 .orElseThrow(()->new RuntimeException("Can't find ticket."));
 
         Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(licencePlate);

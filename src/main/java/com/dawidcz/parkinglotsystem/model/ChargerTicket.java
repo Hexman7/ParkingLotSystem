@@ -26,6 +26,7 @@ public class ChargerTicket implements Serializable {
     private LocalDateTime entryTime;
     @Column(nullable = true)
     private LocalDateTime leaveTime;
+    @Builder.Default
     private Boolean isPaid = false;
 
 //    public ChargerTicket(int chargerId, LocalDateTime entryTime,String licencePlate){

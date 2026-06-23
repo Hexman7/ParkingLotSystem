@@ -16,7 +16,7 @@ public class ChargerController {
         this.chargerService = chargerService;
     }
 
-    @GetMapping("/{id}/available")
+    @GetMapping("/{id}/is-occupied")
     public boolean available(@PathVariable int parkingLotId,@PathVariable int id){
         return chargerService.isOccupied(id,parkingLotId);
     }

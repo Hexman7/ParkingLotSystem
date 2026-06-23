@@ -3,16 +3,13 @@ package com.dawidcz.parkinglotsystem.service;
 import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingSlotService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ParkingSlotService implements IParkingSlotService {
     private final ParkingSlotRepository parkingSlotRepo;
-
-    public ParkingSlotService(ParkingSlotRepository parkingSlotRepo) {
-        this.parkingSlotRepo = parkingSlotRepo;
-    }
-
 
     @Override
     public ParkingSlot changeSlotOccupancy(int parkingLotId, int slotNumber, boolean status) {
@@ -24,7 +21,7 @@ public class ParkingSlotService implements IParkingSlotService {
     }
 
     @Override
-    public Boolean isEmpty(int parkingLotId, int slotNumber) {
+    public Boolean isOccupied(int parkingLotId, int slotNumber) {
         return parkingSlotRepo.getByParkingLotIdAndSlotNumber(parkingLotId,slotNumber);
     }
 }

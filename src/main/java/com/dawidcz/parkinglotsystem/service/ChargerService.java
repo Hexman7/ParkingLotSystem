@@ -5,22 +5,18 @@ import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerRepository;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
     private final ChargerTicketRepository chargerTicketRepository;
-
-    public ChargerService(ChargerRepository chargerRepository, ChargerTicketRepository chargerTicketRepository) {
-        this.chargerRepository = chargerRepository;
-        this.chargerTicketRepository = chargerTicketRepository;
-    }
-
 
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licencePlate) {

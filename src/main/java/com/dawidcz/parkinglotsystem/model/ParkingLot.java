@@ -27,10 +27,15 @@ public class ParkingLot  implements Serializable {
     @OneToMany(mappedBy = "parkingLot",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
+    @Builder.Default
     private List<ParkingSlot> parkingSlots = new ArrayList<>();
 
     @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
     private List<Charger> chargers;
+
+    @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
+    private List<Ticket> tickets;
+
 
 
     public ParkingLot(String name, String city, String streetAddress){

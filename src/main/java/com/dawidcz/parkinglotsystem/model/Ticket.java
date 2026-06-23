@@ -1,9 +1,6 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +18,12 @@ public class Ticket  implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    private int parkingLotId;
+
+    // MANY tickets → ONE parking lot
+    @ManyToOne
+    @JoinColumn(name = "parking_lot_id")
+    private ParkingLot parkingLot;
+
     private String licensePlate;
     private LocalDateTime entryTime;
     @Column(nullable = true)

@@ -3,21 +3,19 @@ package com.dawidcz.parkinglotsystem.service;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.ITicketService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TicketService implements ITicketService {
     private final TicketRepository ticketRepository;
-
-    public TicketService(TicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
-    }
-
 
     @Override
     public Duration getDuration(Long id) {
@@ -44,5 +42,9 @@ public class TicketService implements ITicketService {
         ticket.setLeaveTime(leaveTime);
         ticketRepository.save(ticket);
         return ticket;
+    }
+
+    public List<Ticket> getTickets(int parkingLotId) {
+        return ticketRepository.findTop100ByParkingLotIdOrderByEntryTimeDesc(parkingLotId);
     }
 }
