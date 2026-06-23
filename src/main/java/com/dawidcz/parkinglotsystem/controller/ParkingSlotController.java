@@ -2,17 +2,15 @@ package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
 import com.dawidcz.parkinglotsystem.service.ParkingSlotService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/parking-lots/{id}/slots")
 public class ParkingSlotController {
 
     private final ParkingSlotService psr;
-
-    public ParkingSlotController(ParkingSlotService parkingSlotService) {
-        this.psr = parkingSlotService;
-    }
 
     @GetMapping("/{slotNumber}/is-occupied")
     public boolean isOccupied(@PathVariable int id,@PathVariable int slotNumber){

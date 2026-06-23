@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/parking-lots/{parkingLotId}/tickets")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/parking-lots/{parkingLotId}/tickets")
 public class TicketController {
 
     private final TicketService ticketService;
