@@ -1,9 +1,6 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.dto.PaymentResponse;
-import com.dawidcz.parkinglotsystem.model.ChargerTicket;
-import com.dawidcz.parkinglotsystem.model.Payment;
-import com.dawidcz.parkinglotsystem.model.Ticket;
+import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +25,8 @@ public class PaymentService implements IPaymentService {
                                 .orElse(null)
                 )
                 .amount(amount)
-                .paymentMethod("method")
-                .status("in progress")
+                .paymentMethod(PaymentMethod.FREE)
+                .status(PaymentStatus.PENDING)
                 .build();
 
         return paymentRepository.save(payment);

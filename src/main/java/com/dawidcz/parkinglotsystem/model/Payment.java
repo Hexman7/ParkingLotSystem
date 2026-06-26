@@ -23,6 +23,6 @@ public class Payment  implements Serializable {
     private Long ticketId;
     private Long chargerTickedId;
     private BigDecimal amount;
-    private String paymentMethod;
-    private String status;
+    private PaymentMethod paymentMethod;
+    private PaymentStatus status;
 }
