@@ -19,7 +19,7 @@ public class ChargerService implements IChargerService {
     private final ChargerTicketRepository chargerTicketRepository;
 
     @Override
-    public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licencePlate) {
+    public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licensePlate) {
         Charger charger = chargerRepository.getChargerById(chargerId)
                 .orElseThrow(() -> new RuntimeException("Can't find charger"));
 
@@ -31,15 +31,14 @@ public class ChargerService implements IChargerService {
         chargerRepository.save(charger);
 
         if(status){
-            onChargingStart(chargerId,licencePlate);
+            onChargingStart(chargerId,licensePlate);
         }
         else{
-            onChargingEnd(chargerId,licencePlate);
+            onChargingEnd(chargerId,licensePlate);
         }
     }
 
     private void onChargingStart(int chargerId, String licencePlate){
-//        ChargerTicket chargerTicket = new ChargerTicket(chargerId, LocalDateTime.now(), licencePlate);
         chargerTicketRepository.save(
                 ChargerTicket.builder()
                         .chargerId(chargerId)

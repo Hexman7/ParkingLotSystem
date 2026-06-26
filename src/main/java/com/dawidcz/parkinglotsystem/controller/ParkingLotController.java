@@ -2,7 +2,9 @@ package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.dto.ParkingLotResponse;
 import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
+import com.dawidcz.parkinglotsystem.dto.PaymentResponse;
 import com.dawidcz.parkinglotsystem.dto.TicketResponse;
+import com.dawidcz.parkinglotsystem.model.Payment;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +34,11 @@ public class ParkingLotController {
     }
 
     @PostMapping("/{id}/leave")
-    public ResponseEntity<Void> leave(@PathVariable int id, @RequestBody ReservationRequest request){
-        parkingLotService.onParkingLeave(request.licensePlate,id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<PaymentResponse> leave(@PathVariable int id, @RequestBody ReservationRequest request){
+        Payment payment = parkingLotService.onParkingLeave(request.licensePlate,id);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(PaymentResponse.toResponse(payment));
     }
 
     @GetMapping("/allLots")
