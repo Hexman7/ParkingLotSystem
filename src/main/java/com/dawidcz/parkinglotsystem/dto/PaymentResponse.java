@@ -2,6 +2,8 @@ package com.dawidcz.parkinglotsystem.dto;
 
 import com.dawidcz.parkinglotsystem.model.ParkingSlot;
 import com.dawidcz.parkinglotsystem.model.Payment;
+import com.dawidcz.parkinglotsystem.model.PaymentMethod;
+import com.dawidcz.parkinglotsystem.model.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,8 +15,8 @@ public class PaymentResponse {
 
     Long id;
     BigDecimal amount;
-    String paymentMethod;
-    String status;
+    PaymentMethod paymentMethod;
+    PaymentStatus status;
 
     public static PaymentResponse toResponse(Payment payment){
         return  new PaymentResponse(
