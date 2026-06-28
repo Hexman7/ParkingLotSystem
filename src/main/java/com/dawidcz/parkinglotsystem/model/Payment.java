@@ -1,8 +1,6 @@
 package com.dawidcz.parkinglotsystem.model;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +23,7 @@ public class Payment  implements Serializable {
     private BigDecimal amount;
     private PaymentMethod paymentMethod;
     private PaymentStatus status;
+    @ManyToOne
+    @JoinColumn(name = "parking_lot_id")
+    private ParkingLot parkingLot;
 }

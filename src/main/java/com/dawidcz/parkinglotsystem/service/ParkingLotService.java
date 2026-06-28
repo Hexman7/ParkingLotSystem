@@ -75,7 +75,12 @@ public class ParkingLotService implements IParkingLotService {
                         .orElse(BigDecimal.ZERO)
         );
 
-        return paymentService.createPayment(ticket,chargerTicket,amount);
+        Optional<ParkingLot> pl = parkingLotRepository.findById(parkingLotId);
+
+        Payment savedPayment = paymentService.createPayment(ticket,chargerTicket,amount,pl.orElse(null));
+
+        return savedPayment;
+
     }
 
     @Override

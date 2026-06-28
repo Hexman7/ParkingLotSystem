@@ -36,7 +36,8 @@ public class ParkingLot  implements Serializable {
     @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
 
-
+    @OneToMany(mappedBy = "parkingLot", cascade = CascadeType.ALL)
+    private List<Payment> payments;
 
     public ParkingLot(String name, String city, String streetAddress){
         this.name = name;

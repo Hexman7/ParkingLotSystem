@@ -1,9 +1,6 @@
 package com.dawidcz.parkinglotsystem.dto;
 
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
-import com.dawidcz.parkinglotsystem.model.Payment;
-import com.dawidcz.parkinglotsystem.model.PaymentMethod;
-import com.dawidcz.parkinglotsystem.model.PaymentStatus;
+import com.dawidcz.parkinglotsystem.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,13 +14,15 @@ public class PaymentResponse {
     BigDecimal amount;
     PaymentMethod paymentMethod;
     PaymentStatus status;
+    int parkingLotId;
 
     public static PaymentResponse toResponse(Payment payment){
         return  new PaymentResponse(
                 payment.getId(),
                 payment.getAmount(),
                 payment.getPaymentMethod(),
-                payment.getStatus()
+                payment.getStatus(),
+                payment.getParkingLot().getId()
         );
     }
 }
