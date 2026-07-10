@@ -29,23 +29,4 @@ public class ParkingSlot  implements Serializable {
     @OneToOne(mappedBy = "parkingSlot")
     private Charger charger;
 
-    public ParkingSlot(int slotNumber, ParkingLot parkingLot, int distanceToEntry, boolean isOccupied, boolean isEvCompatible) {
-        this.slotNumber = slotNumber;
-        this.parkingLot = parkingLot;
-        this.distanceToEntry = distanceToEntry;
-        this.isOccupied = isOccupied;
-        this.isEvCompatible = isEvCompatible;
-    }
-//
-//    @Override
-//    public String toString() {
-//        return "ParkingSlot{" +
-//                "id=" + id +
-//                ", slotNumber=" + slotNumber +
-//                ", parkingLotId=" + parkingLot.getId() +
-//                ", distanceToEntry=" + distanceToEntry +
-//                ", isOccupied=" + isOccupied +
-//                ", isEvCompatible=" + isEvCompatible +
-//                '}';
-//    }
 }
