@@ -7,6 +7,7 @@ import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ChargerService implements IChargerService {
     private final ChargerRepository chargerRepository;
     private final ChargerTicketRepository chargerTicketRepository;
 
+    @Transactional
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licensePlate) {
         Charger charger = chargerRepository.getChargerById(chargerId)
@@ -37,6 +39,7 @@ public class ChargerService implements IChargerService {
             onChargingEnd(chargerId,licensePlate);
         }
     }
+
 
     private void onChargingStart(int chargerId, String licencePlate){
         chargerTicketRepository.save(

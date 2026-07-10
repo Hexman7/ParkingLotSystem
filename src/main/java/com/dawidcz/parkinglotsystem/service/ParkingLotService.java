@@ -58,6 +58,7 @@ public class ParkingLotService implements IParkingLotService {
 //      update free slots count
     }
 
+    @Transactional
     @Override
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
