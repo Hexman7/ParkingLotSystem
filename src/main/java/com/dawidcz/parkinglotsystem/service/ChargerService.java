@@ -5,6 +5,7 @@ import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerRepository;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +24,11 @@ public class ChargerService implements IChargerService {
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licensePlate) {
         Charger charger = chargerRepository.getChargerById(chargerId)
-                .orElseThrow(() -> new RuntimeException("Can't find charger"));
+                .orElseThrow(() -> new EntityNotFoundException("Can't find charger"));
 
         if(charger.isOccupied() == status)
         {
-            throw new RuntimeException("Charger is already in that status");
+            throw new WebApplication("Charger is already in that status");
         }
         charger.setOccupied(status);
         chargerRepository.save(charger);

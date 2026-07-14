@@ -1,5 +1,6 @@
 package com.dawidcz.parkinglotsystem.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Builder
 @Data
@@ -26,4 +28,7 @@ public class Payment  implements Serializable {
     @ManyToOne
     @JoinColumn(name = "parking_lot_id")
     private ParkingLot parkingLot;
+    private int retryCount;  // number of retries
+    @Nullable
+    private Optional<Long> retryId;  //
 }

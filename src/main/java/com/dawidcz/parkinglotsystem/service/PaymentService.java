@@ -30,7 +30,10 @@ public class PaymentService implements IPaymentService {
                 .paymentMethod(PaymentMethod.FREE)
                 .status(PaymentStatus.PENDING)
                 .parkingLot(parkingLot)
+                .retryCount(0)
                 .build();
+
+        // call external service for payment
 
         return paymentRepository.save(payment);
     }
@@ -54,6 +57,11 @@ public class PaymentService implements IPaymentService {
 
     public Payment retryPayment(int parkingLotId, Long paymentId){
         Payment failedPayment = paymentRepository.getPaymentByIdAndParkingLotId(paymentId,parkingLotId);
+
+        if(failedPayment.getRetryCount() == 3){
+
+        }
+
         return paymentRepository.save(Payment.builder()
                 .ticketId(failedPayment.getTicketId())
                 .chargerTickedId(failedPayment.getChargerTickedId())
@@ -61,6 +69,8 @@ public class PaymentService implements IPaymentService {
                 .paymentMethod(failedPayment.getPaymentMethod())
                 .status(PaymentStatus.PENDING)
                 .parkingLot(failedPayment.getParkingLot())
+                .retryId(Optional.ofNullable(failedPayment.getId()))
+                .retryCount(failedPayment.getRetryCount() + 1)
                 .build());
     }
 
