@@ -27,17 +27,6 @@ public class ParkingLotService implements IParkingLotService {
     private final ChargerTicketService chargerTicketService;
     private final PaymentService paymentService;
 
-
-//    public ParkingLotService(TicketRepository ticketRepository, ParkingLotRepository parkingLotRepository, ParkingSlotRepository parkingSlotRepository, ChargerTicketRepository chargerTicketRepository){
-//        this.ticketRepository = ticketRepository;
-//        this.parkingLotRepository = parkingLotRepository;
-//        this.parkingSlotRepository = parkingSlotRepository;
-//        this.chargerTicketRepository = chargerTicketRepository;
-//        this.ticketService =  new TicketService(ticketRepository);
-//        this.chargerTicketService =  new ChargerTicketService();
-//    }
-//    removed because of @RequiredArgsConstructor
-
     @Transactional
     @Override
     public Ticket onParkingEnter(String licencePlate, int parkingLotId) {

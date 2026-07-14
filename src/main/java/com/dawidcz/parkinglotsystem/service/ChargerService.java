@@ -19,6 +19,7 @@ public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
     private final ChargerTicketRepository chargerTicketRepository;
+   // private  final  ChargerTicketService chargerTicketService;    // to be changed with ChargerTicketRepo...
 
     @Transactional
     @Override
@@ -28,7 +29,8 @@ public class ChargerService implements IChargerService {
 
         if(charger.isOccupied() == status)
         {
-            throw new WebApplication("Charger is already in that status");
+                // need to be changed to some custom exception
+            throw new RuntimeException("Charger is already in that status");
         }
         charger.setOccupied(status);
         chargerRepository.save(charger);
@@ -41,9 +43,10 @@ public class ChargerService implements IChargerService {
         }
     }
 
-
+    @Transactional
     private void onChargingStart(int chargerId, String licencePlate){
         chargerTicketRepository.save(
+
                 ChargerTicket.builder()
                         .chargerId(chargerId)
                         .entryTime(LocalDateTime.now())
@@ -51,6 +54,7 @@ public class ChargerService implements IChargerService {
                 .build());
     }
 
+    @Transactional
     private void onChargingEnd(int chargerId,String licencePlate){
         ChargerTicket chargerTicket = chargerTicketRepository.getChargerTicket(chargerId,licencePlate)
                 .orElseThrow(()-> new RuntimeException("Can't find charger ticket."));

@@ -5,6 +5,7 @@ import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.ITicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -35,6 +36,7 @@ public class TicketService implements ITicketService {
     }
 
 
+    @Transactional
     @Override
     public Ticket endParking(Long id,LocalDateTime leaveTime) {
         Ticket ticket = ticketRepository.findById(id)
