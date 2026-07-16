@@ -1,5 +1,8 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.client.AdyenClient;
+import com.dawidcz.parkinglotsystem.dto.AuthoriseRequest;
+import com.dawidcz.parkinglotsystem.dto.AuthoriseResponse;
 import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
@@ -7,9 +10,11 @@ import com.dawidcz.parkinglotsystem.service.interfaces.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -17,6 +22,7 @@ import java.util.Optional;
 public class PaymentService implements IPaymentService {
 
     private final PaymentRepository paymentRepository;
+    private final AdyenClient adyenClient;
 
     @Transactional
     @Override
@@ -37,6 +43,21 @@ public class PaymentService implements IPaymentService {
         paymentRepository.save(payment);
 
         // call external service for payment
+        AuthoriseRequest request = new AuthoriseRequest(payment.getId(),payment.getAmount());
+        AuthoriseResponse authoriseResponse = adyenClient.authorise(request);
+
+        if(!Objects.equals(authoriseResponse.getResultCode(), "Authorised")){
+            //retry payment
+
+            paymentFailed(parkingLot.getId(), payment.getId());
+
+            
+            payment.setRetryCount(payment.getRetryCount() + 1);
+
+        }
+
+
+
         boolean paymentStatus = false;
         if(paymentStatus) {
             paymentSuccess(parkingLot.getId(), payment.getId());
@@ -75,8 +96,8 @@ public class PaymentService implements IPaymentService {
     public Payment retryPayment(int parkingLotId, Long paymentId){
         Payment failedPayment = paymentRepository.getPaymentByIdAndParkingLotId(paymentId,parkingLotId);
 
-        if(failedPayment.getRetryCount() == 3){
-
+        if(failedPayment.getRetryCount() >= 3){
+            throw new RuntimeException("Payment failed 3 times"); // to be changed later
         }
 
         return paymentRepository.save(Payment.builder()
@@ -86,7 +107,7 @@ public class PaymentService implements IPaymentService {
                 .paymentMethod(failedPayment.getPaymentMethod())
                 .status(PaymentStatus.PENDING)
                 .parkingLot(failedPayment.getParkingLot())
-                .retryId(Optional.ofNullable(failedPayment.getId()))
+                .retryId(failedPayment.getId())
                 .retryCount(failedPayment.getRetryCount() + 1)
                 .build());
     }

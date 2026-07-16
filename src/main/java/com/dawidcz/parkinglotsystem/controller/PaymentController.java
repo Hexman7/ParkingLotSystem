@@ -35,14 +35,6 @@ public class PaymentController {
                 .body(PaymentResponse.toResponse(payment));
     }
 
-    @PostMapping("/{paymentId}/retry")
-    public ResponseEntity<PaymentResponse> retry(@PathVariable int id, @PathVariable Long paymentId){
-        Payment payment = paymentService.retryPayment(id,paymentId);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(PaymentResponse.toResponse(payment));
-    }
-
     @GetMapping("/all")
     public List<PaymentResponse> getAllSlots(@PathVariable int id){
         return paymentService.getPayments(id)

@@ -30,5 +30,5 @@ public class Payment  implements Serializable {
     private ParkingLot parkingLot;
     private int retryCount;  // number of retries
     @Nullable
-    private Optional<Long> retryId;  //
+    private Long retryId;  //
 }
