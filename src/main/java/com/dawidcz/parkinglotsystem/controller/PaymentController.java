@@ -19,22 +19,6 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping("/{paymentId}/success")
-    public ResponseEntity<PaymentResponse> success(@PathVariable int id, @PathVariable Long paymentId){
-        Payment payment = paymentService.paymentSuccess(id,paymentId);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(PaymentResponse.toResponse(payment));
-    }
-
-    @PostMapping("/{paymentId}/failed")
-    public ResponseEntity<PaymentResponse> failed(@PathVariable int id, @PathVariable Long paymentId){
-        Payment payment = paymentService.paymentFailed(id,paymentId);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(PaymentResponse.toResponse(payment));
-    }
-
     @GetMapping("/all")
     public List<PaymentResponse> getAllSlots(@PathVariable int id){
         return paymentService.getPayments(id)

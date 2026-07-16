@@ -67,7 +67,7 @@ public class ParkingLotService implements IParkingLotService {
 
         Optional<ParkingLot> pl = parkingLotRepository.findById(parkingLotId);
 
-        Payment savedPayment = paymentService.createPayment(ticket,chargerTicket,amount,pl.orElse(null));
+        Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl.orElse(null));
 
         return savedPayment;
 

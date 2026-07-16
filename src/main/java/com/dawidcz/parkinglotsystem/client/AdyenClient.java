@@ -2,6 +2,8 @@ package com.dawidcz.parkinglotsystem.client;
 
 import com.dawidcz.parkinglotsystem.dto.AuthoriseRequest;
 import com.dawidcz.parkinglotsystem.dto.AuthoriseResponse;
+import com.dawidcz.parkinglotsystem.dto.CaptureRequest;
+import com.dawidcz.parkinglotsystem.dto.CaptureResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -21,6 +23,16 @@ public class AdyenClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(AuthoriseResponse.class)
+                .block();
+    }
+
+    public CaptureResponse capture(CaptureRequest request) {
+
+        return webClient.post()
+                .uri("/capture")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(CaptureResponse.class)
                 .block();
     }
 }
