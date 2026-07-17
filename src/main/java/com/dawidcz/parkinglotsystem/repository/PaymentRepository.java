@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface PaymentRepository extends CrudRepository<Payment,Long> {
 
+
     Payment getPaymentByIdAndParkingLotId(Long paymentId, int parkingLotId);
 
     List<Payment> findByParkingLotId(int parkingLotId);

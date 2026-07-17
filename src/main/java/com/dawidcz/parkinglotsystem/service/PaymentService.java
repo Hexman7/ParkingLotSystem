@@ -6,17 +6,14 @@ import com.dawidcz.parkinglotsystem.dto.AuthoriseResponse;
 import com.dawidcz.parkinglotsystem.dto.CaptureRequest;
 import com.dawidcz.parkinglotsystem.dto.CaptureResponse;
 import com.dawidcz.parkinglotsystem.model.*;
-import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -48,42 +45,17 @@ public class PaymentService implements IPaymentService {
                                             .build());
     }
 
-
-//    public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot){
-//        Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
-//        AuthoriseRequest request = new AuthoriseRequest(payment.getId(),payment.getAmount());
-//        do{
-//            AuthoriseResponse authoriseResponse = adyenClient.authorise(request);
-//            System.out.println(authoriseResponse.getResultCode());
-//            if(!Objects.equals(authoriseResponse.getResultCode(), "Authorised")) {
-//                Payment failedPayment = paymentFailed(payment);
-//                payment = retryPayment(failedPayment);
-//                request = new AuthoriseRequest(payment.getId(),payment.getAmount());
-//            }
-//            else if(authoriseResponse.getResultCode().equals("Authorised")){
-//                Payment succedpayment = paymentSuccess(payment);
-//                CaptureRequest capReq = new CaptureRequest(payment.getId());
-//                CaptureResponse capRes = adyenClient.capture(capReq);
-//                if(capRes.getResultCode().equals("capture-received"))
-//                    return succedpayment;
-//                else throw new RuntimeException("Capture payment failed");
-//            }
-//
-//
-//        }
-//        while(payment.getRetryCount() <3);
-//
-//        // call external service for payment
-//
-//        return payment;
-//
-//    }
-
     public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
         Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
 
         for(int i =0; i <= MAX_RETRIES; i++) {
             if (authorise(payment)) {
+                // capture can be done later
+                // first capture
+                // if it fails
+                // capture again x2
+                // try to authorise
+
                 if (capture(payment)) {
                     payment = paymentSuccess(payment);
                     return payment;
@@ -112,6 +84,7 @@ public class PaymentService implements IPaymentService {
         return CAPTURE_RECEIVED.equals(response.getResponse());
     }
 
+    // one method for failed and success
     @Transactional
     public Payment paymentSuccess(Payment payment){
         payment.setStatus(PaymentStatus.PAID);

@@ -1,5 +1,11 @@
 package com.dawidcz.parkinglotsystem.dto;
 
-public record EnterRequest (
-    String licensePlate
-){}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class EnterRequest {
+    String licensePlate;
+    }
+

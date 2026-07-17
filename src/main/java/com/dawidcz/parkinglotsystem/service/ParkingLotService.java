@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class ParkingLotService implements IParkingLotService {
@@ -47,6 +48,7 @@ public class ParkingLotService implements IParkingLotService {
 //      update free slots count
     }
 
+
     @Transactional
     @Override
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
@@ -68,7 +70,7 @@ public class ParkingLotService implements IParkingLotService {
         Optional<ParkingLot> pl = parkingLotRepository.findById(parkingLotId);
 
         Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl.orElse(null));
-
+        //
         return savedPayment;
 
     }
@@ -101,4 +103,5 @@ public class ParkingLotService implements IParkingLotService {
     public List<ParkingSlot> getAllSlots(int parkingLotId) {
         return parkingSlotRepository.findByParkingLotId(parkingLotId);
     }
+
 }

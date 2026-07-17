@@ -1,21 +1,21 @@
 package com.dawidcz.parkinglotsystem.controller;
 
-import com.dawidcz.parkinglotsystem.dto.ParkingLotResponse;
-import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
-import com.dawidcz.parkinglotsystem.dto.PaymentResponse;
-import com.dawidcz.parkinglotsystem.dto.TicketResponse;
+import com.dawidcz.parkinglotsystem.dto.*;
 import com.dawidcz.parkinglotsystem.model.Payment;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/parking-lots")
@@ -34,8 +34,8 @@ public class ParkingLotController {
     }
 
     @PostMapping("/{id}/leave")
-    public ResponseEntity<PaymentResponse> leave(@PathVariable int id, @RequestBody ReservationRequest request){
-        Payment payment = parkingLotService.onParkingLeave(request.licensePlate,id);
+    public ResponseEntity<PaymentResponse> leave(@PathVariable int id, @RequestBody EnterRequest request){
+        Payment payment = parkingLotService.onParkingLeave(request.getLicensePlate(),id);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(PaymentResponse.toResponse(payment));
@@ -69,4 +69,10 @@ public class ParkingLotController {
     @GetMapping("/{id}/slots/ev/free/closest")
     public int getClosestEvFreeSlot(@PathVariable int id){return parkingLotService.getClosestEvFreeSlot(id);}
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleUnexpectedErrors(HttpServletRequest req, Exception e){
+        log.error("\nUnexpected error occurred on request: {}", req.getServletPath(), e);
+        return "Error";
+    }
 }
