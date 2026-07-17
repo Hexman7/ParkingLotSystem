@@ -27,7 +27,7 @@ public class PaymentService implements IPaymentService {
     private final AdyenClient adyenClient;
 
     private static final String AUTHORISED = "Authorised";
-    private static final String CAPTURE_RECEIVED = "capture-received";
+    private static final String CAPTURE_RECEIVED = "capture_received";
     private static final int MAX_RETRIES = 2;
 
     @Transactional
@@ -82,40 +82,34 @@ public class PaymentService implements IPaymentService {
     public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
         Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
 
-        while (true) {
-
+        for(int i =0; i <= MAX_RETRIES; i++) {
             if (authorise(payment)) {
-                return capture(payment);
+                if (capture(payment)) {
+                    payment = paymentSuccess(payment);
+                    return payment;
+                }
+                else {
+                    payment = retryPayment(payment);
+                }
             }
-
-            paymentFailed(payment);
-
-            if (payment.getRetryCount() >= MAX_RETRIES) {
-                return payment; // ostatnia jest już FAILED
+            else
+            {
+                payment = retryPayment(payment);
             }
-
-            payment = retryPayment(payment);
         }
-
+        return payment;
     }
 
     private boolean authorise(Payment payment) {
         AuthoriseResponse response = adyenClient.authorise(
                 new AuthoriseRequest(payment.getId(), payment.getAmount()));
-        System.out.println(response);
         return AUTHORISED.equals(response.getResultCode());
     }
 
-    private Payment capture(Payment payment) {
+    private boolean capture(Payment payment) {
         CaptureResponse response =
                 adyenClient.capture(new CaptureRequest(payment.getId()));
-        System.out.println(response);
-        if (!CAPTURE_RECEIVED.equals(response.getResponse())) {
-            payment = paymentFailed(payment);
-        }
-        else payment = paymentSuccess(payment);
-
-        return payment;
+        return CAPTURE_RECEIVED.equals(response.getResponse());
     }
 
     @Transactional
@@ -132,16 +126,22 @@ public class PaymentService implements IPaymentService {
 
     @Transactional
     public Payment retryPayment(Payment failedPayment){
-        return paymentRepository.save(Payment.builder()
-                .ticketId(failedPayment.getTicketId())
-                .chargerTickedId(failedPayment.getChargerTickedId())
-                .amount(failedPayment.getAmount())
-                .paymentMethod(failedPayment.getPaymentMethod())
-                .status(PaymentStatus.PENDING)
-                .parkingLot(failedPayment.getParkingLot())
-                .retryId(failedPayment.getId())
-                .retryCount(failedPayment.getRetryCount() + 1)
-                .build());
+        failedPayment = paymentFailed(failedPayment);
+        if(failedPayment.getRetryCount() >= MAX_RETRIES)
+        {
+            return failedPayment;
+        }else{
+            return paymentRepository.save(Payment.builder()
+                    .ticketId(failedPayment.getTicketId())
+                    .chargerTickedId(failedPayment.getChargerTickedId())
+                    .amount(failedPayment.getAmount())
+                    .paymentMethod(failedPayment.getPaymentMethod())
+                    .status(PaymentStatus.PENDING)
+                    .parkingLot(failedPayment.getParkingLot())
+                    .retryId(failedPayment.getId())
+                    .retryCount(failedPayment.getRetryCount() + 1)
+                    .build());
+        }
     }
 
 
