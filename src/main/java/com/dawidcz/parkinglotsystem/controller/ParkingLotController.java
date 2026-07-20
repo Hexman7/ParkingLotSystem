@@ -69,10 +69,4 @@ public class ParkingLotController {
     @GetMapping("/{id}/slots/ev/free/closest")
     public int getClosestEvFreeSlot(@PathVariable int id){return parkingLotService.getClosestEvFreeSlot(id);}
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleUnexpectedErrors(HttpServletRequest req, Exception e){
-        log.error("\nUnexpected error occurred on request: {}", req.getServletPath(), e);
-        return "Error";
-    }
 }

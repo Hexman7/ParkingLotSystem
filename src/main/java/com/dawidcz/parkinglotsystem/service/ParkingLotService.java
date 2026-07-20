@@ -1,5 +1,8 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.exception.LicensePlateIsEmptyException;
+import com.dawidcz.parkinglotsystem.exception.ParkingLotNotExistsException;
+import com.dawidcz.parkinglotsystem.exception.TicketNotFoundException;
 import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
@@ -34,10 +37,11 @@ public class ParkingLotService implements IParkingLotService {
         // Entry time comes from the system not request
 //     TO DO:
 //        validation - check if params are not empty
-        ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId).orElseThrow(()->new RuntimeException("Can't find ticket."));
+        ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId)
+                .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));
 
         if(licencePlate.isBlank()){
-            throw  new RuntimeException("Licence plate value is empty");
+            throw  new LicensePlateIsEmptyException("License plate value is empty.");
         }
 
         return ticketRepository.save(Ticket.builder()
@@ -53,7 +57,7 @@ public class ParkingLotService implements IParkingLotService {
     @Override
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
-                .orElseThrow(()->new RuntimeException("Can't find ticket."));
+                .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
 
         Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(licencePlate);
 
@@ -67,9 +71,10 @@ public class ParkingLotService implements IParkingLotService {
                         .orElse(BigDecimal.ZERO)
         );
 
-        Optional<ParkingLot> pl = parkingLotRepository.findById(parkingLotId);
+        ParkingLot pl = parkingLotRepository.findById(parkingLotId)
+                .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));;
 
-        Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl.orElse(null));
+        Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl);
         //
         return savedPayment;
 

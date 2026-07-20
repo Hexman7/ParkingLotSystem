@@ -1,5 +1,6 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.exception.TicketNotFoundException;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.ITicketService;
@@ -40,7 +41,7 @@ public class TicketService implements ITicketService {
     @Override
     public Ticket endParking(Long id,LocalDateTime leaveTime) {
         Ticket ticket = ticketRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Can't find ticket"));
+                .orElseThrow(()->new TicketNotFoundException("Can't find ticket"));
         ticket.setLeaveTime(leaveTime);
         ticketRepository.save(ticket);
         return ticket;
