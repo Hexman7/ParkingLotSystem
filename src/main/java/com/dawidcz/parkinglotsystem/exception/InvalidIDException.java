@@ -3,9 +3,9 @@ package com.dawidcz.parkinglotsystem.exception;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class InvalidIdException extends RuntimeException {
+public class InvalidIDException extends RuntimeException {
     String message;
-    public InvalidIdException(String msg) {
+    public InvalidIDException(String msg) {
         super(msg);
         this.message = msg;
     }
