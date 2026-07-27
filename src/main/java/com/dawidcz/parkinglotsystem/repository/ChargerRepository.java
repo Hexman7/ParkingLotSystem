@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface ChargerRepository extends CrudRepository<Charger,Integer> {
  // SQL exceptions in repositories
-    Optional<Charger> getChargerById(int id);
 
     List<Charger> findByParkingLotId(int parkingLotId);
 }

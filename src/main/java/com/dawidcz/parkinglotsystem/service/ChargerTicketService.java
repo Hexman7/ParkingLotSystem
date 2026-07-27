@@ -1,15 +1,14 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.model.Charger;
 import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
-import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerTicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +36,9 @@ public class ChargerTicketService implements IChargerTicketService {
 
     }
 
+    public Optional<ChargerTicket> getChargerTicket(String licencePlate){
+        return chargerTicketRepository.getChargerTicketForPayment(licencePlate);
+    }
 
     @Override
     public void finishCharging() {

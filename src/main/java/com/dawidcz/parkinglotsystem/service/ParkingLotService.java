@@ -58,11 +58,10 @@ public class ParkingLotService implements IParkingLotService {
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
                 .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
-
-        Optional<ChargerTicket> chargerTicket = chargerTicketRepository.getChargerTicketForPayment(licencePlate);
+        Optional<ChargerTicket> chargerTicket = chargerTicketService.getChargerTicket(licencePlate);
+        // change status of ticket to paid if payment is successful
 
         Ticket savedTicket = ticketService.endParking(ticket.getId(),LocalDateTime.now());
-
         BigDecimal amount = ticketService.calculateFee(savedTicket.getId());
 
         amount = amount.add(

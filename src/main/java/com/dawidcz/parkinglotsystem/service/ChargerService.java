@@ -24,7 +24,7 @@ public class ChargerService implements IChargerService {
     @Transactional
     @Override
     public void changeChargerOccupancy(int chargerId,boolean status,int parkingLotId, String licensePlate) {
-        Charger charger = chargerRepository.getChargerById(chargerId)
+        Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(() -> new EntityNotFoundException("Can't find charger"));
 
         if(charger.isOccupied() == status)
@@ -63,7 +63,7 @@ public class ChargerService implements IChargerService {
     }
 
     public boolean isOccupied(int chargerId, int parkingLotId){
-        Charger charger = chargerRepository.getChargerById(chargerId)
+        Charger charger = chargerRepository.findById(chargerId)
                 .orElseThrow(()->new RuntimeException("Charger doesn't exist"));
         return charger.isOccupied();
     }
