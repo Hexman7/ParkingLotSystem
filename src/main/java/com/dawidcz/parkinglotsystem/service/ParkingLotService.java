@@ -26,7 +26,6 @@ public class ParkingLotService implements IParkingLotService {
     private final TicketRepository ticketRepository;
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingSlotRepository parkingSlotRepository;
-    private final ChargerTicketRepository chargerTicketRepository;
     private final TicketService ticketService;
     private final ChargerTicketService chargerTicketService;
     private final PaymentService paymentService;
@@ -44,11 +43,7 @@ public class ParkingLotService implements IParkingLotService {
             throw  new LicensePlateIsEmptyException("License plate value is empty.");
         }
 
-        return ticketRepository.save(Ticket.builder()
-                .parkingLot(parkingLot)
-                .licensePlate(licencePlate)
-                .entryTime(LocalDateTime.now())
-                .build());
+        return ticketService.startParking(parkingLot,licencePlate);
 //      update free slots count
     }
 

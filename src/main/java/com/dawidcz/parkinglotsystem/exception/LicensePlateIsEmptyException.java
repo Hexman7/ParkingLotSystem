@@ -1,10 +1,11 @@
 package com.dawidcz.parkinglotsystem.exception;
 
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class LicensePlateIsEmptyException extends RuntimeException {
     private String message;
 
-    public LicensePlateIsEmptyException(){}
 
     public LicensePlateIsEmptyException(String msg){
         super(msg);

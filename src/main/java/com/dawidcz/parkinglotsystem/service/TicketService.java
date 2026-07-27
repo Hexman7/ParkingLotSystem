@@ -1,6 +1,7 @@
 package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.exception.TicketNotFoundException;
+import com.dawidcz.parkinglotsystem.model.ParkingLot;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.ITicketService;
@@ -21,14 +22,11 @@ public class TicketService implements ITicketService {
 
     @Override
     public Duration getDuration(Long id) {
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-        Duration duration = Duration.ZERO;
-        if(ticket.isPresent()){
-            LocalDateTime start = ticket.get().getEntryTime();
-            LocalDateTime end = ticket.get().getLeaveTime();
-            duration = Duration.between(start,end);
-        }
-        return duration;
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
+        LocalDateTime start = ticket.getEntryTime();
+        LocalDateTime end = ticket.getLeaveTime();
+        return Duration.between(start,end);
     }
 
     @Override
@@ -45,6 +43,15 @@ public class TicketService implements ITicketService {
         ticket.setLeaveTime(leaveTime);
         ticketRepository.save(ticket);
         return ticket;
+    }
+
+    @Transactional
+    public Ticket startParking(ParkingLot parkingLot, String licencePlate){
+        return ticketRepository.save(Ticket.builder()
+                .parkingLot(parkingLot)
+                .licensePlate(licencePlate)
+                .entryTime(LocalDateTime.now())
+                .build());
     }
 
     public List<Ticket> getTickets(int parkingLotId) {

@@ -1,5 +1,8 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.exception.InvalidIdException;
+import com.dawidcz.parkinglotsystem.exception.InvalidTimeException;
+import com.dawidcz.parkinglotsystem.exception.LicensePlateIsEmptyException;
 import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerTicketService;
@@ -28,6 +31,19 @@ public class ChargerTicketService implements IChargerTicketService {
 
     @Override
     public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licencePlate) {
+
+        if (chargerId < 0) {
+            throw new InvalidIdException("Invalid charger id");
+        }
+
+        if (entryTime == null) {
+            throw new InvalidTimeException("Entry time cannot be null");
+        }
+
+        if (licencePlate == null || licencePlate.isBlank()) {
+            throw new LicensePlateIsEmptyException("Licence plate cannot be empty");
+        }
+
         return ChargerTicket.builder()
                 .chargerId(chargerId)
                 .entryTime(entryTime)
@@ -41,7 +57,6 @@ public class ChargerTicketService implements IChargerTicketService {
     }
 
     @Override
-    public void finishCharging() {
-
+    public void finishCharging(){
     }
 }
