@@ -82,7 +82,7 @@ public class PaymentService implements IPaymentService {
                 // try to authorise
 
         for(int attempt = 0; attempt <= MAX_RETRIES, attempt++){
-v           if(capture(payment)){
+           if(capture(payment)){
                 payment = paymentSuccess(payment);
                 break;
             }
