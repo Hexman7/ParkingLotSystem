@@ -45,32 +45,66 @@ public class PaymentService implements IPaymentService {
                                             .build());
     }
 
+    // public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
+    //     Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
+
+    //     for(int i =0; i <= MAX_RETRIES; i++) {
+    //         if (authorise(payment)) {
+    //             // capture can be done later
+    //             // first capture
+    //             // if it fails
+    //             // capture again x2
+    //             // try to authorise
+
+    //             if (capture(payment)) {
+    //                 payment = paymentSuccess(payment);
+    //                 return payment;
+    //             }
+    //             else {
+    //                 payment = retryPayment(payment);
+    //             }
+    //         }
+    //         else
+    //         {
+    //             payment = retryPayment(payment);
+    //         }
+    //     }
+    //     return payment;
+    // }
+
+
     public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
         Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
-
-        for(int i =0; i <= MAX_RETRIES; i++) {
-            if (authorise(payment)) {
                 // capture can be done later
                 // first capture
                 // if it fails
                 // capture again x2
                 // try to authorise
 
-                if (capture(payment)) {
-                    payment = paymentSuccess(payment);
-                    return payment;
-                }
-                else {
-                    payment = retryPayment(payment);
-                }
+        for(int attempt = 0; attempt <= MAX_RETRIES, attempt++){
+v           if(capture(payment)){
+                payment = paymentSuccess(payment);
+                break;
             }
             else
             {
                 payment = retryPayment(payment);
             }
+
+            if(attempt == MAX_RETRIES){
+                if(authorise(payment))
+                {
+                    payment.setStatus("authorised");
+                    break;
+                }
+                else
+                    throw new CapturePaymentFailedException("Capturing payment failed 3 times.");
+            }
+
         }
         return payment;
     }
+
 
     private boolean authorise(Payment payment) {
         AuthoriseResponse response = adyenClient.authorise(
