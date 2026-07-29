@@ -29,6 +29,7 @@ public class Payment  implements Serializable {
     @JoinColumn(name = "parking_lot_id")
     private ParkingLot parkingLot;
     private int retryCount;  // number of retries
-    @Nullable
-    private Long retryId;  //
+    @ManyToOne
+    @JoinColumn(name = "previous_payment_id")
+    private Payment previousPayment;
 }

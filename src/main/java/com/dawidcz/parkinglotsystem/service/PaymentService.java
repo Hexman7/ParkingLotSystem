@@ -1,10 +1,8 @@
 package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.client.AdyenClient;
-import com.dawidcz.parkinglotsystem.dto.AuthoriseRequest;
-import com.dawidcz.parkinglotsystem.dto.AuthoriseResponse;
-import com.dawidcz.parkinglotsystem.dto.CaptureRequest;
-import com.dawidcz.parkinglotsystem.dto.CaptureResponse;
+import com.dawidcz.parkinglotsystem.dto.*;
+import com.dawidcz.parkinglotsystem.exception.CapturePaymentFailedException;
 import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IPaymentService;
@@ -27,7 +25,6 @@ public class PaymentService implements IPaymentService {
     private static final String CAPTURE_RECEIVED = "capture_received";
     private static final int MAX_RETRIES = 2;
 
-    @Transactional
     @Override
     public Payment createPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
         return paymentRepository.save(Payment.builder()
@@ -45,66 +42,60 @@ public class PaymentService implements IPaymentService {
                                             .build());
     }
 
-    // public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
-    //     Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
+    @Transactional
+    public Payment processPayment(Ticket ticket,Optional<ChargerTicket> chargerTicket,
+            BigDecimal amount,ParkingLot parkingLot) {
 
-    //     for(int i =0; i <= MAX_RETRIES; i++) {
-    //         if (authorise(payment)) {
-    //             // capture can be done later
-    //             // first capture
-    //             // if it fails
-    //             // capture again x2
-    //             // try to authorise
+        Payment payment = createPayment(ticket, chargerTicket, amount, parkingLot);
 
-    //             if (capture(payment)) {
-    //                 payment = paymentSuccess(payment);
-    //                 return payment;
-    //             }
-    //             else {
-    //                 payment = retryPayment(payment);
-    //             }
-    //         }
-    //         else
-    //         {
-    //             payment = retryPayment(payment);
-    //         }
-    //     }
-    //     return payment;
-    // }
+        CaptureResult captureResult = tryCapture(payment);
 
-
-    public Payment processPayment(Ticket ticket, Optional<ChargerTicket> chargerTicket, BigDecimal amount, ParkingLot parkingLot) {
-        Payment payment = createPayment(ticket,chargerTicket,amount,parkingLot);
-                // capture can be done later
-                // first capture
-                // if it fails
-                // capture again x2
-                // try to authorise
-
-        for(int attempt = 0; attempt <= MAX_RETRIES, attempt++){
-           if(capture(payment)){
-                payment = paymentSuccess(payment);
-                break;
-            }
-            else
-            {
-                payment = retryPayment(payment);
-            }
-
-            if(attempt == MAX_RETRIES){
-                if(authorise(payment))
-                {
-                    payment.setStatus("authorised");
-                    break;
-                }
-                else
-                    throw new CapturePaymentFailedException("Capturing payment failed 3 times.");
-            }
-
+        if (captureResult.isSuccess()) {
+            return captureResult.getPayment();
         }
-        return payment;
+
+        Payment lastPayment = captureResult.getPayment();
+
+        if (authorise(lastPayment)) {
+            lastPayment.setStatus(PaymentStatus.AUTHORISED);
+        } else {
+            lastPayment.setStatus(PaymentStatus.FAILED);
+        }
+
+        return paymentRepository.save(lastPayment);
     }
 
+    private CaptureResult tryCapture(Payment payment) {
+
+        Payment currentPayment = payment;
+
+        for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+
+            CaptureResponse response = adyenClient.capture(
+                    new CaptureRequest(currentPayment.getId()));
+
+            if (CAPTURE_RECEIVED.equals(response.getResponse())) {
+
+                currentPayment.setStatus(PaymentStatus.CAPTURED);
+
+                return new CaptureResult(
+                        true,
+                        paymentRepository.save(currentPayment)
+                );
+            }
+
+            if (attempt < MAX_RETRIES) {
+                currentPayment = createRetryPayment(currentPayment);
+            }
+        }
+
+        currentPayment.setStatus(PaymentStatus.FAILED);
+
+        return new CaptureResult(
+                false,
+                paymentRepository.save(currentPayment)
+        );
+    }
 
     private boolean authorise(Payment payment) {
         AuthoriseResponse response = adyenClient.authorise(
@@ -112,43 +103,24 @@ public class PaymentService implements IPaymentService {
         return AUTHORISED.equals(response.getResultCode());
     }
 
-    private boolean capture(Payment payment) {
-        CaptureResponse response =
-                adyenClient.capture(new CaptureRequest(payment.getId()));
-        return CAPTURE_RECEIVED.equals(response.getResponse());
-    }
 
-    // one method for failed and success
-    @Transactional
-    public Payment paymentSuccess(Payment payment){
-        payment.setStatus(PaymentStatus.PAID);
-        return paymentRepository.save(payment);
-    }
+    private Payment createRetryPayment(Payment previous) {
 
-    @Transactional
-    public Payment paymentFailed(Payment payment){
-        payment.setStatus(PaymentStatus.FAILED);
-        return paymentRepository.save(payment);
-    }
+        previous.setStatus(PaymentStatus.FAILED);
+        paymentRepository.save(previous);
 
-    @Transactional
-    public Payment retryPayment(Payment failedPayment){
-        failedPayment = paymentFailed(failedPayment);
-        if(failedPayment.getRetryCount() >= MAX_RETRIES)
-        {
-            return failedPayment;
-        }else{
-            return paymentRepository.save(Payment.builder()
-                    .ticketId(failedPayment.getTicketId())
-                    .chargerTickedId(failedPayment.getChargerTickedId())
-                    .amount(failedPayment.getAmount())
-                    .paymentMethod(failedPayment.getPaymentMethod())
-                    .status(PaymentStatus.PENDING)
-                    .parkingLot(failedPayment.getParkingLot())
-                    .retryId(failedPayment.getId())
-                    .retryCount(failedPayment.getRetryCount() + 1)
-                    .build());
-        }
+        return paymentRepository.save(
+                Payment.builder()
+                        .ticketId(previous.getTicketId())
+                        .chargerTickedId(previous.getChargerTickedId())
+                        .amount(previous.getAmount())
+                        .paymentMethod(previous.getPaymentMethod())
+                        .status(PaymentStatus.PENDING)
+                        .parkingLot(previous.getParkingLot())
+                        .previousPayment(previous)
+                        .retryCount(previous.getRetryCount() + 1)
+                        .build()
+        );
     }
 
 

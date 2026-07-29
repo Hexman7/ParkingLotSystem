@@ -15,6 +15,7 @@ public class PaymentResponse {
     PaymentMethod paymentMethod;
     PaymentStatus status;
     int parkingLotId;
+    int paymentRetryCount;
 
     public static PaymentResponse toResponse(Payment payment){
         return  new PaymentResponse(
@@ -22,7 +23,8 @@ public class PaymentResponse {
                 payment.getAmount(),
                 payment.getPaymentMethod(),
                 payment.getStatus(),
-                payment.getParkingLot().getId()
+                payment.getParkingLot().getId(),
+                payment.getRetryCount()
         );
     }
 }
