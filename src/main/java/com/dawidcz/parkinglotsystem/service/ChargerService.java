@@ -16,7 +16,7 @@ import java.util.List;
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
-    private  final  ChargerTicketService chargerTicketService;
+    private final ChargerTicketService chargerTicketService;
 
     @Transactional
     @Override

@@ -1,9 +1,11 @@
 package com.dawidcz.parkinglotsystem.controller;
 
 import com.dawidcz.parkinglotsystem.dto.*;
+import com.dawidcz.parkinglotsystem.model.ParkingLotStatus;
 import com.dawidcz.parkinglotsystem.model.Payment;
 import com.dawidcz.parkinglotsystem.model.Ticket;
 import com.dawidcz.parkinglotsystem.service.ParkingLotService;
+import com.dawidcz.parkinglotsystem.service.ParkingStatusService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ParkingLotController {
 
     private final ParkingLotService parkingLotService;
+    private final ParkingStatusService parkingStatusService;
 
     public record ReservationRequest (String licensePlate) {}
 
@@ -55,6 +58,11 @@ public class ParkingLotController {
                 .stream()
                 .map(ParkingSlotResponse::toResponse)
                 .toList();
+    }
+
+    @GetMapping("/{id}/status")
+    public ParkingLotStatus getStatus(@PathVariable int id) {
+        return parkingStatusService.getParkingLotStatus(id);
     }
 
     @GetMapping("/{id}/slots/free/count")

@@ -25,6 +25,7 @@ dependencies {
 	implementation("org.springframework:spring-webmvc:7.0.7")
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation('com.h2database:h2:2.4.240')
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'

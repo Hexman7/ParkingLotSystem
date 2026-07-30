@@ -7,6 +7,7 @@ import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ public class ParkingLotService implements IParkingLotService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "parkingStatus", key = "#parkingLotId")
     public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
         ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId)
                 .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));
@@ -47,6 +49,7 @@ public class ParkingLotService implements IParkingLotService {
 
     @Transactional
     @Override
+    @CacheEvict(value = "parkingStatus", key = "#parkingLotId")
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketService.getTicketForLeave(licencePlate,parkingLotId);
         Optional<ChargerTicket> chargerTicket = chargerTicketService.getChargerTicket(licencePlate);
