@@ -16,7 +16,7 @@ import java.util.List;
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
-    private  final  ChargerTicketService chargerTicketService;    // to be changed with ChargerTicketRepo...
+    private  final  ChargerTicketService chargerTicketService;
 
     @Transactional
     @Override
@@ -26,7 +26,6 @@ public class ChargerService implements IChargerService {
 
         if(charger.isOccupied() == status)
         {
-                // need to be changed to some custom exception
             throw new ChargerOccupiedStatusException("Charger is already in that status");
         }
         charger.setOccupied(status);

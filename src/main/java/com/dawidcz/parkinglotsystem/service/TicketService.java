@@ -53,12 +53,23 @@ public class TicketService implements ITicketService {
                 .build());
     }
 
+    public void changeLeaveTimeAfterPaymentFailed(Ticket ticket){
+        ticket.setLeaveTime(null);
+        ticketRepository.save(ticket);
+    }
+
     public Ticket getTicketForLeave(String licencePlate, int parkingLotId){
         return ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
                 .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
     }
 
+    public boolean checkIfVehicleIsAlreadyParked(String licencePlate, int parkingLotId){
+        return ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate, parkingLotId).isPresent();
+    }
+
     public List<Ticket> getTickets(int parkingLotId) {
         return ticketRepository.findTop100ByParkingLotIdOrderByEntryTimeDesc(parkingLotId);
     }
+
+
 }

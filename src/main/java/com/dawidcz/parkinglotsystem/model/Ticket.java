@@ -23,7 +23,6 @@ public class Ticket  implements Serializable {
     @ManyToOne
     @JoinColumn(name = "parking_lot_id")
     private ParkingLot parkingLot;
-
     private String licensePlate;
     private LocalDateTime entryTime;
     @Column(nullable = true)

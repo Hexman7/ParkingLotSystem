@@ -2,6 +2,7 @@ package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.exception.LicensePlateIsEmptyException;
 import com.dawidcz.parkinglotsystem.exception.ParkingLotNotExistsException;
+import com.dawidcz.parkinglotsystem.exception.VehicleAlreadyParkedException;
 import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
@@ -28,15 +29,16 @@ public class ParkingLotService implements IParkingLotService {
     @Transactional
     @Override
     public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
-        // Entry time comes from the system not request
-//     TO DO:
-//        validation - check if params are not empty
         ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId)
                 .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));
 
         if(licencePlate.isBlank()){
             throw  new LicensePlateIsEmptyException("License plate value is empty.");
         }
+
+       if(ticketService.checkIfVehicleIsAlreadyParked(licencePlate,parkingLotId)){
+           throw new VehicleAlreadyParkedException("Vehicle with this license plate is already parked.");
+       }
 
         return ticketService.startParking(parkingLot,licencePlate);
 //      update free slots count
@@ -63,6 +65,11 @@ public class ParkingLotService implements IParkingLotService {
                 .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));;
 
         Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl);
+
+        if(savedPayment.getStatus() != PaymentStatus.AUTHORISED &&
+                savedPayment.getStatus() != PaymentStatus.CAPTURED ){
+            ticketService.changeLeaveTimeAfterPaymentFailed(savedTicket);
+        }
         //
         return savedPayment;
 
