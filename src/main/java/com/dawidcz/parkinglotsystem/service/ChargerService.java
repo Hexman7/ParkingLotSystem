@@ -1,16 +1,14 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.exception.ChargerOccupiedStatusException;
 import com.dawidcz.parkinglotsystem.model.Charger;
-import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerRepository;
-import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,8 +16,7 @@ import java.util.List;
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
-    private final ChargerTicketRepository chargerTicketRepository;
-   // private  final  ChargerTicketService chargerTicketService;    // to be changed with ChargerTicketRepo...
+    private  final  ChargerTicketService chargerTicketService;    // to be changed with ChargerTicketRepo...
 
     @Transactional
     @Override
@@ -30,41 +27,22 @@ public class ChargerService implements IChargerService {
         if(charger.isOccupied() == status)
         {
                 // need to be changed to some custom exception
-            throw new RuntimeException("Charger is already in that status");
+            throw new ChargerOccupiedStatusException("Charger is already in that status");
         }
         charger.setOccupied(status);
         chargerRepository.save(charger);
 
         if(status){
-            onChargingStart(chargerId,licensePlate);
+            chargerTicketService.onChargingStart(chargerId,licensePlate);
         }
         else{
-            onChargingEnd(chargerId,licensePlate);
+            chargerTicketService.onChargingEnd(chargerId,licensePlate);
         }
-    }
-
-    @Transactional
-    private void onChargingStart(int chargerId, String licencePlate){
-        chargerTicketRepository.save(
-
-                ChargerTicket.builder()
-                        .chargerId(chargerId)
-                        .entryTime(LocalDateTime.now())
-                        .licencePlate(licencePlate)
-                .build());
-    }
-
-    @Transactional
-    private void onChargingEnd(int chargerId,String licencePlate){
-        ChargerTicket chargerTicket = chargerTicketRepository.getChargerTicket(chargerId,licencePlate)
-                .orElseThrow(()-> new RuntimeException("Can't find charger ticket."));
-            chargerTicket.setLeaveTime(LocalDateTime.now());
-            chargerTicketRepository.save(chargerTicket);
     }
 
     public boolean isOccupied(int chargerId, int parkingLotId){
         Charger charger = chargerRepository.findById(chargerId)
-                .orElseThrow(()->new RuntimeException("Charger doesn't exist"));
+                .orElseThrow(()->new EntityNotFoundException("Can't find charger"));
         return charger.isOccupied();
     }
 

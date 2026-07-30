@@ -1,5 +1,6 @@
 package com.dawidcz.parkinglotsystem.service;
 
+import com.dawidcz.parkinglotsystem.exception.ChargeTicketNotFoundException;
 import com.dawidcz.parkinglotsystem.exception.InvalidIDException;
 import com.dawidcz.parkinglotsystem.exception.InvalidTimeException;
 import com.dawidcz.parkinglotsystem.exception.LicensePlateIsEmptyException;
@@ -8,6 +9,7 @@ import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerTicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -58,5 +60,20 @@ public class ChargerTicketService implements IChargerTicketService {
 
     @Override
     public void finishCharging(){
+    }
+
+    public void onChargingStart(int chargerId, String licensePlate){
+        chargerTicketRepository.save(ChargerTicket.builder()
+                .chargerId(chargerId)
+                .entryTime(LocalDateTime.now())
+                .licencePlate(licensePlate)
+                .build());
+    }
+
+    public void onChargingEnd(int chargerId,String licencePlate){
+        ChargerTicket chargerTicket = chargerTicketRepository.getChargerTicket(chargerId,licencePlate)
+                .orElseThrow(()-> new ChargeTicketNotFoundException("Can't find charger ticket."));
+        chargerTicket.setLeaveTime(LocalDateTime.now());
+        chargerTicketRepository.save(chargerTicket);
     }
 }
