@@ -14,6 +14,5 @@ public interface IParkingLotService {
     int getClosestEvFreeSlot(int parkingSlotId);
     int getFreeSlotsCount(int parkingLotId);
     int getTotalSlotCount(int parkingLotId);
-    void processPayment();
 }
 

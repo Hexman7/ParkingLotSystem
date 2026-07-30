@@ -2,12 +2,8 @@ package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.exception.LicensePlateIsEmptyException;
 import com.dawidcz.parkinglotsystem.exception.ParkingLotNotExistsException;
-import com.dawidcz.parkinglotsystem.exception.TicketNotFoundException;
 import com.dawidcz.parkinglotsystem.model.*;
-import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
-import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
-import com.dawidcz.parkinglotsystem.repository.TicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,12 +19,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ParkingLotService implements IParkingLotService {
 
-    private final TicketRepository ticketRepository;
     private final ParkingLotRepository parkingLotRepository;
-    private final ParkingSlotRepository parkingSlotRepository;
     private final TicketService ticketService;
     private final ChargerTicketService chargerTicketService;
     private final PaymentService paymentService;
+    private final ParkingSlotService parkingSlotService;
 
     @Transactional
     @Override
@@ -51,8 +46,7 @@ public class ParkingLotService implements IParkingLotService {
     @Transactional
     @Override
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
-        Ticket ticket = ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
-                .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
+        Ticket ticket = ticketService.getTicketForLeave(licencePlate,parkingLotId);
         Optional<ChargerTicket> chargerTicket = chargerTicketService.getChargerTicket(licencePlate);
         // change status of ticket to paid if payment is successful
 
@@ -76,23 +70,22 @@ public class ParkingLotService implements IParkingLotService {
 
     @Override
     public int getClosestFreeSlot(int parkingLotId) {
-        return parkingSlotRepository.getClosestFreeSlot(parkingLotId);
+        return parkingSlotService.getClosestFreeSlot(parkingLotId);
     }
 
     @Override
-    public int getClosestEvFreeSlot(int parkingLotId) {return parkingSlotRepository.getClosestEvFreeSlot(parkingLotId);}
+    public int getClosestEvFreeSlot(int parkingLotId) {
+        return parkingSlotService.getClosestEvFreeSlot(parkingLotId);
+    }
 
     @Override
     public int getFreeSlotsCount(int parkingLotId) {
-        return parkingSlotRepository.countByIsOccupiedFalseAndParkingLotId(parkingLotId);
+        return parkingSlotService.countByIsOccupiedFalseAndParkingLotId(parkingLotId);
     }
 
     @Override
-    public int getTotalSlotCount(int parkingLotId) {return parkingSlotRepository.countByParkingLotId(parkingLotId);}
-
-    @Override
-    public void processPayment() {
-
+    public int getTotalSlotCount(int parkingLotId) {
+        return parkingSlotService.countByParkingLotId(parkingLotId);
     }
 
     public List<ParkingLot> getAll(){
@@ -100,7 +93,7 @@ public class ParkingLotService implements IParkingLotService {
     }
 
     public List<ParkingSlot> getAllSlots(int parkingLotId) {
-        return parkingSlotRepository.findByParkingLotId(parkingLotId);
+        return parkingSlotService.findByParkingLotId(parkingLotId);
     }
 
 }

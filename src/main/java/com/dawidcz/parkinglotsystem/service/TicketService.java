@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +51,11 @@ public class TicketService implements ITicketService {
                 .licensePlate(licencePlate)
                 .entryTime(LocalDateTime.now())
                 .build());
+    }
+
+    public Ticket getTicketForLeave(String licencePlate, int parkingLotId){
+        return ticketRepository.getTicketByLeaveTimeNullAndLicensePlateAndParkingLotId(licencePlate,parkingLotId)
+                .orElseThrow(()->new TicketNotFoundException("Can't find ticket."));
     }
 
     public List<Ticket> getTickets(int parkingLotId) {

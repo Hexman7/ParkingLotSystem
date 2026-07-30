@@ -7,23 +7,45 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingSlotService implements IParkingSlotService {
-    private final ParkingSlotRepository parkingSlotRepo;
+    private final ParkingSlotRepository parkingSlotRepository;
 
     @Transactional
     @Override
     public ParkingSlot changeSlotOccupancy(int parkingLotId, int slotNumber, boolean status) {
-        ParkingSlot ps = parkingSlotRepo.getParkingSlotBySlotNumberAndParkingLotId(parkingLotId,slotNumber);
+        ParkingSlot ps = parkingSlotRepository.getParkingSlotBySlotNumberAndParkingLotId(parkingLotId,slotNumber);
         ps.setOccupied(status);
-        ps = parkingSlotRepo.save(ps);
+        ps = parkingSlotRepository.save(ps);
         return ps;
         // change the closest free slot if its closest one
     }
 
     @Override
     public Boolean isOccupied(int parkingLotId, int slotNumber) {
-        return parkingSlotRepo.getByParkingLotIdAndSlotNumber(parkingLotId,slotNumber);
+        return parkingSlotRepository.getByParkingLotIdAndSlotNumber(parkingLotId,slotNumber);
+    }
+
+    public int getClosestFreeSlot(int parkingLotId){
+        return parkingSlotRepository.getClosestFreeSlot(parkingLotId);
+    }
+
+    public int getClosestEvFreeSlot(int parkingLotId) {
+        return parkingSlotRepository.getClosestEvFreeSlot(parkingLotId);
+    }
+
+    public int countByIsOccupiedFalseAndParkingLotId(int parkingLotId) {
+        return parkingSlotRepository.countByIsOccupiedFalseAndParkingLotId(parkingLotId);
+    }
+
+    public int countByParkingLotId(int parkingLotId) {
+        return parkingSlotRepository.countByParkingLotId(parkingLotId);
+    }
+
+    public List<ParkingSlot> findByParkingLotId(int parkingLotId) {
+        return parkingSlotRepository.findByParkingLotId(parkingLotId);
     }
 }
