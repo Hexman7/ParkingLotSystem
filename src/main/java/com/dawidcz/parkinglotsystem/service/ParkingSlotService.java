@@ -13,13 +13,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ParkingSlotService implements IParkingSlotService {
     private final ParkingSlotRepository parkingSlotRepository;
+    private final ParkingStatusService parkingStatusService;
 
     @Transactional
     @Override
     public ParkingSlot changeSlotOccupancy(int parkingLotId, int slotNumber, boolean status) {
         ParkingSlot ps = parkingSlotRepository.getParkingSlotBySlotNumberAndParkingLotId(parkingLotId,slotNumber);
+        boolean previousStatus = ps.isOccupied();
         ps.setOccupied(status);
         ps = parkingSlotRepository.save(ps);
+
+        parkingStatusService.updateCache(parkingLotId, previousStatus,status,ps.getSlotNumber());
         return ps;
         // change the closest free slot if its closest one
     }
