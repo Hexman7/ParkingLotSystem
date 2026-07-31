@@ -7,6 +7,7 @@ import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.ParkingLotRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IParkingLotService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ParkingLotService implements IParkingLotService {
 
     private final ParkingLotRepository parkingLotRepository;
@@ -30,20 +32,21 @@ public class ParkingLotService implements IParkingLotService {
     @Transactional
     @Override
     @CacheEvict(value = "parkingStatus", key = "#parkingLotId")
-    public Ticket onParkingEnter(String licencePlate, int parkingLotId) {
+    public Ticket onParkingEnter(String licensePlate, int parkingLotId) {
         ParkingLot parkingLot = parkingLotRepository.findById(parkingLotId)
                 .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));
 
-        if(licencePlate.isBlank()){
+        if(licensePlate.isBlank()){
+            log.warn("License plate is empty for entering vehicle: licensePlate{} on parkingLot with id{}",licensePlate,parkingLotId);
             throw  new LicensePlateIsEmptyException("License plate value is empty.");
         }
 
-       if(ticketService.checkIfVehicleIsAlreadyParked(licencePlate,parkingLotId)){
+       if(ticketService.checkIfVehicleIsAlreadyParked(licensePlate,parkingLotId)){
+           log.warn("Vehicle {} is already parked in parking with id{}.",licensePlate,parkingLotId);
            throw new VehicleAlreadyParkedException("Vehicle with this license plate is already parked.");
        }
 
-        return ticketService.startParking(parkingLot,licencePlate);
-//      update free slots count
+        return ticketService.startParking(parkingLot,licensePlate);
     }
 
 
@@ -53,7 +56,6 @@ public class ParkingLotService implements IParkingLotService {
     public Payment onParkingLeave(String licencePlate, int parkingLotId) {
         Ticket ticket = ticketService.getTicketForLeave(licencePlate,parkingLotId);
         Optional<ChargerTicket> chargerTicket = chargerTicketService.getChargerTicket(licencePlate);
-        // change status of ticket to paid if payment is successful
 
         Ticket savedTicket = ticketService.endParking(ticket.getId(),LocalDateTime.now());
         BigDecimal amount = ticketService.calculateFee(savedTicket.getId());
@@ -69,11 +71,13 @@ public class ParkingLotService implements IParkingLotService {
 
         Payment savedPayment = paymentService.processPayment(ticket,chargerTicket,amount,pl);
 
+        // reverting ticket change if payment fails
         if(savedPayment.getStatus() != PaymentStatus.AUTHORISED &&
                 savedPayment.getStatus() != PaymentStatus.CAPTURED ){
+
             ticketService.changeLeaveTimeAfterPaymentFailed(savedTicket);
         }
-        //
+
         return savedPayment;
 
     }

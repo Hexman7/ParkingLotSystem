@@ -6,6 +6,7 @@ import com.dawidcz.parkinglotsystem.repository.ChargerRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChargerService implements IChargerService {
 
     private final ChargerRepository chargerRepository;
@@ -26,6 +28,8 @@ public class ChargerService implements IChargerService {
 
         if(charger.isOccupied() == status)
         {
+            log.warn("Tried to set to same status inside ChangeChargerOccupancy for chargerId={}, status={}, parkingLotId={}, licensePlate={}"
+                    ,chargerId,status,parkingLotId,licensePlate);
             throw new ChargerOccupiedStatusException("Charger is already in that status");
         }
         charger.setOccupied(status);

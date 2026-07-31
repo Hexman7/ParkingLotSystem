@@ -8,6 +8,7 @@ import com.dawidcz.parkinglotsystem.model.ChargerTicket;
 import com.dawidcz.parkinglotsystem.repository.ChargerTicketRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IChargerTicketService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChargerTicketService implements IChargerTicketService {
 
     private final ChargerTicketRepository chargerTicketRepository;
@@ -32,24 +34,30 @@ public class ChargerTicketService implements IChargerTicketService {
     }
 
     @Override
-    public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licencePlate) {
+    public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licensePlate) {
 
         if (chargerId < 0) {
+            log.warn("Tried to createChargerTicket for not existing charger: chargerId={}, entryTime={}, licensePlate={}"
+                    ,chargerId,entryTime,licensePlate);
             throw new InvalidIDException("Invalid charger id");
         }
 
         if (entryTime == null) {
+            log.warn("Missing start time in createChargetTicket: chargerId={}, entryTime={}, licensePlate={}"
+                    ,chargerId,entryTime,licensePlate);
             throw new InvalidTimeException("Entry time cannot be null");
         }
 
-        if (licencePlate == null || licencePlate.isBlank()) {
+        if (licensePlate == null || licensePlate.isBlank()) {
+            log.warn("Missing licensePlate in createChargetTicket: chargerId={}, entryTime={}, licensePlate={}"
+                    ,chargerId,entryTime,licensePlate);
             throw new LicensePlateIsEmptyException("Licence plate cannot be empty");
         }
 
         return ChargerTicket.builder()
                 .chargerId(chargerId)
                 .entryTime(entryTime)
-                .licencePlate(licencePlate)
+                .licencePlate(licensePlate)
                 .build();
 
     }

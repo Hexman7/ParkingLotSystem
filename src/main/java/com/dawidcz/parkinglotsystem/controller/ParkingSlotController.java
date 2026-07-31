@@ -3,11 +3,13 @@ package com.dawidcz.parkinglotsystem.controller;
 import com.dawidcz.parkinglotsystem.dto.ParkingSlotResponse;
 import com.dawidcz.parkinglotsystem.service.ParkingSlotService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/parking-lots/{id}/slots")
+@Slf4j
 public class ParkingSlotController {
 
     private final ParkingSlotService psr;
@@ -19,11 +21,13 @@ public class ParkingSlotController {
 
     @PostMapping("/{slotNumber}/occupy")
     public ParkingSlotResponse occupy(@PathVariable int id, @PathVariable int slotNumber){
+        log.info("Received occupy slot request: parkingLotId={}, slotNumber={}",id,slotNumber);
         return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,true));
     }
 
     @PostMapping("/{slotNumber}/free")
     public ParkingSlotResponse free(@PathVariable int id, @PathVariable int slotNumber){
+        log.info("Received free slot request: parkingLotId={}, slotNumber={}",id,slotNumber);
         return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,false));
     }
 }

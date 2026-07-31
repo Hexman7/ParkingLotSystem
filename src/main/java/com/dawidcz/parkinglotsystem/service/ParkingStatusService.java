@@ -1,18 +1,14 @@
 package com.dawidcz.parkinglotsystem.service;
 
-import com.dawidcz.parkinglotsystem.model.ParkingLotStatus;
-import com.dawidcz.parkinglotsystem.model.ParkingSlot;
+import com.dawidcz.parkinglotsystem.dto.ParkingLotStatus;
 import com.dawidcz.parkinglotsystem.repository.ParkingSlotRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

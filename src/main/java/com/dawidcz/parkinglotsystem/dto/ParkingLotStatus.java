@@ -1,4 +1,4 @@
-package com.dawidcz.parkinglotsystem.model;
+package com.dawidcz.parkinglotsystem.dto;
 
 import lombok.Builder;
 import lombok.Data;
