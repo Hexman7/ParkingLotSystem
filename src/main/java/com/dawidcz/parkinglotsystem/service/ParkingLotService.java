@@ -37,12 +37,12 @@ public class ParkingLotService implements IParkingLotService {
                 .orElseThrow(()->new ParkingLotNotExistsException("Parking Lot not found."));
 
         if(licensePlate.isBlank()){
-            log.warn("License plate is empty for entering vehicle: licensePlate{} on parkingLot with id{}",licensePlate,parkingLotId);
+            log.warn("License plate is empty for entering vehicle: licensePlate [{}] on parkingLot with id [{}]",licensePlate,parkingLotId);
             throw  new LicensePlateIsEmptyException("License plate value is empty.");
         }
 
        if(ticketService.checkIfVehicleIsAlreadyParked(licensePlate,parkingLotId)){
-           log.warn("Vehicle {} is already parked in parking with id{}.",licensePlate,parkingLotId);
+           log.warn("Vehicle [{}] is already parked in parking with id [{}].",licensePlate,parkingLotId);
            throw new VehicleAlreadyParkedException("Vehicle with this license plate is already parked.");
        }
 

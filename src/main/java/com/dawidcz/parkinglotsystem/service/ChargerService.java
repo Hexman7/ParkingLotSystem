@@ -28,7 +28,7 @@ public class ChargerService implements IChargerService {
 
         if(charger.isOccupied() == status)
         {
-            log.warn("Tried to set to same status inside ChangeChargerOccupancy for chargerId={}, status={}, parkingLotId={}, licensePlate={}"
+            log.warn("Tried to set to same status inside ChangeChargerOccupancy for chargerId=[{}], status=[{}], parkingLotId=[{}], licensePlate=[{}]"
                     ,chargerId,status,parkingLotId,licensePlate);
             throw new ChargerOccupiedStatusException("Charger is already in that status");
         }

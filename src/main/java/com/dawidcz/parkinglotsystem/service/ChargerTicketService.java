@@ -37,19 +37,19 @@ public class ChargerTicketService implements IChargerTicketService {
     public ChargerTicket createChargerTicket(int chargerId,LocalDateTime entryTime,String licensePlate) {
 
         if (chargerId < 0) {
-            log.warn("Tried to createChargerTicket for not existing charger: chargerId={}, entryTime={}, licensePlate={}"
+            log.warn("Tried to createChargerTicket for not existing charger: chargerId=[{}], entryTime=[{}], licensePlate=[{}]"
                     ,chargerId,entryTime,licensePlate);
             throw new InvalidIDException("Invalid charger id");
         }
 
         if (entryTime == null) {
-            log.warn("Missing start time in createChargetTicket: chargerId={}, entryTime={}, licensePlate={}"
+            log.warn("Missing start time in createChargetTicket: chargerId=[{}], entryTime=[{}], licensePlate=[{}]"
                     ,chargerId,entryTime,licensePlate);
             throw new InvalidTimeException("Entry time cannot be null");
         }
 
         if (licensePlate == null || licensePlate.isBlank()) {
-            log.warn("Missing licensePlate in createChargetTicket: chargerId={}, entryTime={}, licensePlate={}"
+            log.warn("Missing licensePlate in createChargetTicket: chargerId=[{}], entryTime=[{}], licensePlate=[{}]"
                     ,chargerId,entryTime,licensePlate);
             throw new LicensePlateIsEmptyException("Licence plate cannot be empty");
         }

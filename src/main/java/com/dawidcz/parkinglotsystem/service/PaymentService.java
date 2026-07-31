@@ -2,7 +2,6 @@ package com.dawidcz.parkinglotsystem.service;
 
 import com.dawidcz.parkinglotsystem.client.AdyenClient;
 import com.dawidcz.parkinglotsystem.dto.*;
-import com.dawidcz.parkinglotsystem.exception.CapturePaymentFailedException;
 import com.dawidcz.parkinglotsystem.model.*;
 import com.dawidcz.parkinglotsystem.repository.PaymentRepository;
 import com.dawidcz.parkinglotsystem.service.interfaces.IPaymentService;
@@ -77,7 +76,6 @@ public class PaymentService implements IPaymentService {
             if (CAPTURE_RECEIVED.equals(response.getResponse())) {
 
                 currentPayment.setStatus(PaymentStatus.CAPTURED);
-
                 return new CaptureResult(
                         true,
                         paymentRepository.save(currentPayment)

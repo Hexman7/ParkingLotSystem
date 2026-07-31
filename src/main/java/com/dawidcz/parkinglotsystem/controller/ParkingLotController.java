@@ -26,7 +26,7 @@ public class ParkingLotController {
     @PostMapping("/{id}/enter")
     public ResponseEntity<TicketResponse> enter(@RequestBody EnterRequest request, @PathVariable int id ) {
         Ticket ticket = parkingLotService.onParkingEnter(request.getLicensePlate(),id);
-        log.info("Received enter request: parkingLotId={}, licensePlate={}",id,request.getLicensePlate());
+        log.info("Received enter request: parkingLotId=[{}], licensePlate=[{}]",id,request.getLicensePlate());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(TicketResponse.toResponse(ticket));
@@ -35,7 +35,7 @@ public class ParkingLotController {
     @PostMapping("/{id}/leave")
     public ResponseEntity<PaymentResponse> leave(@PathVariable int id, @RequestBody EnterRequest request){
         Payment payment = parkingLotService.onParkingLeave(request.getLicensePlate(),id);
-        log.info("Received leave request: parkingLotId={}, licensePlate={}",id,request.getLicensePlate());
+        log.info("Received leave request: parkingLotId=[{}], licensePlate=[{}]",id,request.getLicensePlate());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(PaymentResponse.toResponse(payment));

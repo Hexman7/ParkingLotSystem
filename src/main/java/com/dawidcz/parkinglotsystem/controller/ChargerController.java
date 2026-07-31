@@ -23,14 +23,14 @@ public class ChargerController {
 
     @PostMapping("/{id}/occupy")
     public ResponseEntity<Void> occupy(@PathVariable int id, @PathVariable int parkingLotId,@RequestParam String licensePlate ){
-        log.debug("Received occupy charger request: chargerId={}, parkingLotId={}, licensePlate={}",id,parkingLotId,licensePlate);
+        log.debug("Received occupy charger request: chargerId=[{}], parkingLotId=[{}], licensePlate=[{}]",id,parkingLotId,licensePlate);
         chargerService.changeChargerOccupancy(id,true,parkingLotId,licensePlate);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/free")
     public ResponseEntity<Void> free(@PathVariable int id, @PathVariable int parkingLotId,@RequestParam String licensePlate){
-        log.info("Received free charger request: chargerId={}, parkingLotId={}, licensePlate={}",id,parkingLotId,licensePlate);
+        log.info("Received free charger request: chargerId=[{}], parkingLotId=[{}], licensePlate=[{}]",id,parkingLotId,licensePlate);
         chargerService.changeChargerOccupancy(id,false,parkingLotId,licensePlate);
         return ResponseEntity.ok().build();
     }

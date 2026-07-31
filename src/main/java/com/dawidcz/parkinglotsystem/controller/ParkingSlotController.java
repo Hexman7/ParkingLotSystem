@@ -21,13 +21,13 @@ public class ParkingSlotController {
 
     @PostMapping("/{slotNumber}/occupy")
     public ParkingSlotResponse occupy(@PathVariable int id, @PathVariable int slotNumber){
-        log.info("Received occupy slot request: parkingLotId={}, slotNumber={}",id,slotNumber);
+        log.info("Received occupy slot request: parkingLotId=[{}], slotNumber=[{}]",id,slotNumber);
         return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,true));
     }
 
     @PostMapping("/{slotNumber}/free")
     public ParkingSlotResponse free(@PathVariable int id, @PathVariable int slotNumber){
-        log.info("Received free slot request: parkingLotId={}, slotNumber={}",id,slotNumber);
+        log.info("Received free slot request: parkingLotId=[{}], slotNumber=[{}]",id,slotNumber);
         return ParkingSlotResponse.toResponse(psr.changeSlotOccupancy(id,slotNumber,false));
     }
 }
